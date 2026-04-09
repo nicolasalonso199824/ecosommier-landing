@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ecosommier — Admin</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050D1A;--bg2:#0B1829;--bg3:#112240;
+  --blue:#3B82F6;--sky:#93C5FD;--white:#fff;
+  --muted:rgba(255,255,255,.5);
+  --border:rgba(147,197,253,.1);
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;
+  --r:10px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;}
+
+/* ── LOGIN ── */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem;}
+.login-box{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:2.5rem;width:100%;max-width:380px;text-align:center;
+}
+.login-logo{font-size:1.5rem;font-weight:700;margin-bottom:.3rem;}
+.login-logo span{color:var(--sky);}
+.login-sub{font-size:.82rem;color:var(--muted);margin-bottom:2rem;}
+.fg{margin-bottom:1rem;text-align:left;}
+.fg label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:.4rem;}
+.fg input{
+  width:100%;padding:.75rem 1rem;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--white);font-size:.9rem;outline:none;
+  transition:border-color .2s;
+}
+.fg input:focus{border-color:var(--blue);}
+.fg input::placeholder{color:rgba(255,255,255,.2);}
+.btn-login{
+  width:100%;padding:.85rem;border:none;border-radius:var(--r);
+  font-size:.92rem;font-weight:600;cursor:pointer;
+  background:linear-gradient(135deg,#1D4ED8,#3B82F6);color:#fff;
+  transition:opacity .2s;
+}
+.btn-login:hover{opacity:.88;}
+.btn-login:disabled{opacity:.5;cursor:default;}
+.login-err{font-size:.8rem;color:var(--danger);margin-top:.8rem;display:none;}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none;}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2rem;background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+}
+.topbar-logo{font-size:1.1rem;font-weight:700;}
+.topbar-logo span{color:var(--sky);}
+.topbar-r{display:flex;align-items:center;gap:.8rem;}
+.badge-admin{
+  font-size:.72rem;color:var(--sky);
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);
+  padding:.25rem .7rem;border-radius:50px;
+}
+.btn-logout{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  color:var(--muted);padding:.4rem .9rem;border-radius:var(--r);
+  font-size:.8rem;cursor:pointer;transition:all .2s;
+}
+.btn-logout:hover{color:var(--white);border-color:rgba(255,255,255,.2);}
+
+/* ── STATS ── */
+.statsbar{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--border);border-bottom:1px solid var(--border);
+}
+.sbox{background:var(--bg2);padding:1.1rem 1.5rem;}
+.sbox .n{font-size:1.8rem;font-weight:700;color:var(--sky);}
+.sbox .l{font-size:.73rem;color:var(--muted);margin-top:.15rem;}
+.sbox.warn .n{color:var(--warning);}
+.sbox.err  .n{color:var(--danger);}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  padding:0 2rem;background:var(--bg2);
+}
+.tab{
+  background:none;border:none;color:var(--muted);
+  padding:.9rem 1.3rem;font-size:.88rem;font-weight:500;
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:color .2s;
+}
+.tab.active{color:var(--sky);border-bottom-color:var(--sky);}
+.tab:hover{color:var(--white);}
+
+/* ── CONTENT ── */
+.panel{padding:1.8rem 2rem;display:none;}
+.panel.active{display:block;}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.2rem;flex-wrap:wrap;gap:.8rem;
+}
+.panel-header h2{font-size:1rem;font-weight:600;}
+.btn-add{
+  background:linear-gradient(135deg,#1D4ED8,#3B82F6);color:#fff;
+  border:none;padding:.5rem 1.2rem;border-radius:50px;
+  font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .2s;
+}
+.btn-add:hover{opacity:.88;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{text-align:left;padding:.65rem 1rem;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:.65rem 1rem;border-bottom:1px solid rgba(147,197,253,.05);vertical-align:middle;}
+tr:hover td{background:rgba(255,255,255,.015);}
+
+/* badges */
+.badge{display:inline-block;padding:.2rem .65rem;border-radius:50px;font-size:.72rem;font-weight:600;}
+.b-nuevo     {background:rgba(59,130,246,.15);color:#93c5fd;}
+.b-contactado{background:rgba(245,158,11,.15);color:#fcd34d;}
+.b-confirmado{background:rgba(16,185,129,.15);color:#6ee7b7;}
+.b-enviado   {background:rgba(139,92,246,.15);color:#c4b5fd;}
+.b-entregado {background:rgba(34,197,94,.15);color:#86efac;}
+.b-cancelado {background:rgba(239,68,68,.15);color:#fca5a5;}
+.b-activo    {background:rgba(16,185,129,.15);color:#6ee7b7;}
+.b-inactivo  {background:rgba(239,68,68,.15);color:#fca5a5;}
+
+/* inline edit */
+.ii{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:6px;color:var(--white);padding:.28rem .55rem;
+  font-size:.84rem;width:88px;outline:none;
+}
+.ii:focus{border-color:var(--blue);}
+.btn-save{
+  background:var(--success);border:none;color:#fff;
+  padding:.28rem .65rem;border-radius:6px;
+  font-size:.76rem;cursor:pointer;margin-left:.25rem;
+}
+.btn-act{
+  background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.3);
+  color:#a5b4fc;padding:.28rem .65rem;border-radius:6px;
+  font-size:.76rem;cursor:pointer;margin-left:.25rem;transition:background .2s;
+}
+.btn-act:hover{background:rgba(99,102,241,.4);}
+
+/* status select */
+.sel-status{
+  background:var(--bg3);border:1px solid var(--border);
+  color:var(--white);padding:.3rem .5rem;border-radius:6px;
+  font-size:.78rem;cursor:pointer;outline:none;
+}
+
+/* filter bar */
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.1rem;}
+.fbtn{
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  color:var(--muted);padding:.32rem .85rem;border-radius:50px;
+  font-size:.76rem;cursor:pointer;transition:all .2s;
+}
+.fbtn.active{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4);color:var(--sky);}
+
+/* modal */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.72);
+  backdrop-filter:blur(4px);z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;width:100%;max-width:420px;
+  transform:translateY(18px);transition:transform .25s;
+}
+.overlay.open .modal{transform:none;}
+.modal h3{font-size:1rem;font-weight:600;margin-bottom:1.3rem;}
+.modal .fg input,.modal .fg select{
+  width:100%;padding:.7rem;
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:8px;color:var(--white);font-size:.88rem;outline:none;
+}
+.modal .fg select option{background:var(--bg2);}
+.mbtns{display:flex;gap:.7rem;margin-top:1.3rem;}
+.mbtns .btn-login{flex:1;}
+.btn-cancel{
+  flex:1;padding:.85rem;border:none;border-radius:var(--r);
+  font-size:.92rem;font-weight:600;cursor:pointer;
+  background:rgba(255,255,255,.07);color:var(--white);transition:background .2s;
+}
+.btn-cancel:hover{background:rgba(255,255,255,.12);}
+
+.empty{text-align:center;padding:3rem;color:var(--muted);}
+.empty .ei{font-size:2.2rem;margin-bottom:.6rem;}
+.empty p{font-size:.85rem;}
+.loading{text-align:center;padding:2rem;color:var(--muted);font-size:.85rem;}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="login">
+  <div class="login-box">
+    <div class="login-logo">Eco<span>sommier</span></div>
+    <div class="login-sub">Panel de administración</div>
+    <div class="fg">
+      <label>Email</label>
+      <input type="email" id="lemail" placeholder="tu@email.com" autocomplete="email"/>
+    </div>
+    <div class="fg">
+      <label>Contraseña</label>
+      <input type="password" id="lpass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="loginErr">Email o contraseña incorrectos.</div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="dashboard">
+
+  <div class="topbar">
+    <div class="topbar-logo">Eco<span>sommier</span> <span style="font-size:.75rem;font-weight:400;color:var(--muted)">Admin</span></div>
+    <div class="topbar-r">
+      <span class="badge-admin" id="adminEmail">—</span>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="statsbar">
+    <div class="sbox"><div class="n" id="sTotal">—</div><div class="l">Pedidos totales</div></div>
+    <div class="sbox warn"><div class="n" id="sNew">—</div><div class="l">Leads nuevos</div></div>
+    <div class="sbox"><div class="n" id="sProd">—</div><div class="l">Productos activos</div></div>
+    <div class="sbox err" id="sLowBox"><div class="n" id="sLow">—</div><div class="l">Stock bajo (&lt;3 unid.)</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('productos',this)">📦 Productos</button>
+    <button class="tab" onclick="switchTab('pedidos',this)">📋 Pedidos</button>
+    <button class="tab" onclick="switchTab('inventario',this)">📊 Inventario</button>
+  </div>
+
+  <!-- ── PRODUCTOS ── -->
+  <div class="panel active" id="panel-productos">
+    <div class="panel-header">
+      <h2>Productos</h2>
+      <button class="btn-add" onclick="openModal()">+ Nuevo producto</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Nombre</th><th>Precio ($ARS)</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tbProducts"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── PEDIDOS ── -->
+  <div class="panel" id="panel-pedidos">
+    <div class="panel-header"><h2>Pedidos y Leads</h2></div>
+    <div class="filters">
+      <button class="fbtn active" onclick="filterOrders('all',this)">Todos</button>
+      <button class="fbtn" onclick="filterOrders('nuevo',this)">Nuevos</button>
+      <button class="fbtn" onclick="filterOrders('contactado',this)">Contactados</button>
+      <button class="fbtn" onclick="filterOrders('confirmado',this)">Confirmados</button>
+      <button class="fbtn" onclick="filterOrders('entregado',this)">Entregados</button>
+      <button class="fbtn" onclick="filterOrders('cancelado',this)">Cancelados</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Cliente</th><th>WhatsApp</th><th>Producto</th><th>Estado</th></tr></thead>
+        <tbody id="tbOrders"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── INVENTARIO ── -->
+  <div class="panel" id="panel-inventario">
+    <div class="panel-header">
+      <h2>Movimientos de inventario</h2>
+      <button class="btn-add" onclick="openInvModal()">+ Registrar movimiento</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Motivo</th></tr></thead>
+        <tbody id="tbInv"><tr><td colspan="5" class="loading">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ MODAL: Producto ═══ -->
+<div class="overlay" id="mProduct">
+  <div class="modal">
+    <h3 id="mTitle">Nuevo producto</h3>
+    <input type="hidden" id="mId"/>
+    <div class="fg"><label>Nombre</label><input type="text" id="mName" placeholder="Ecosommier Nature"/></div>
+    <div class="fg"><label>Descripción</label><input type="text" id="mDesc" placeholder="Descripción corta"/></div>
+    <div class="fg"><label>Precio ($ARS)</label><input type="number" id="mPrice" placeholder="89990"/></div>
+    <div class="fg"><label>Stock</label><input type="number" id="mStock" placeholder="10"/></div>
+    <div class="mbtns">
+      <button class="btn-cancel" onclick="closeModal('mProduct')">Cancelar</button>
+      <button class="btn-login" onclick="saveProduct()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Inventario ═══ -->
+<div class="overlay" id="mInv">
+  <div class="modal">
+    <h3>Registrar movimiento</h3>
+    <div class="fg">
+      <label>Producto</label>
+      <select id="invProduct" style="width:100%;padding:.7rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:.88rem;outline:none"></select>
+    </div>
+    <div class="fg">
+      <label>Tipo</label>
+      <select id="invType" style="width:100%;padding:.7rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:.88rem;outline:none">
+        <option value="entrada">Entrada (stock entra)</option>
+        <option value="salida">Salida (stock sale)</option>
+      </select>
+    </div>
+    <div class="fg"><label>Cantidad</label><input type="number" id="invQty" placeholder="5" style="width:100%;padding:.7rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:.88rem;outline:none"/></div>
+    <div class="fg"><label>Motivo</label><input type="text" id="invReason" placeholder="Ej: Compra proveedor / Venta directa" style="width:100%;padding:.7rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:.88rem;outline:none"/></div>
+    <div class="mbtns">
+      <button class="btn-cancel" onclick="closeModal('mInv')">Cancelar</button>
+      <button class="btn-login" onclick="saveMovement()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPA_URL = 'https://ocoqkvrksupcpxjobpeo.supabase.co';
+const SUPA_KEY = 'sb_publishable_KZeWlBwlsJkOGjoGm29EZQ_RzhCzm9x';
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let allOrders = [];
+let allProducts = [];
+
+/* ── AUTH ── */
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showDashboard(session.user);
+}
+
+async function doLogin() {
+  const email = document.getElementById('lemail').value.trim();
+  const pass  = document.getElementById('lpass').value;
+  const btn   = document.getElementById('loginBtn');
+  const err   = document.getElementById('loginErr');
+  btn.disabled = true; btn.textContent = 'Ingresando...';
+  err.style.display = 'none';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  } else {
+    showDashboard(data.user);
+  }
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+}
+
+function showDashboard(user) {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('adminEmail').textContent = user?.email || 'Admin';
+  loadAll();
+}
+
+document.getElementById('lpass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+/* ── TABS ── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+/* ── LOAD ALL ── */
+function loadAll() {
+  loadStats(); loadProducts(); loadOrders(); loadInventory();
+}
+
+/* ── STATS ── */
+async function loadStats() {
+  const [{ count: total }, { count: nuevo }, { data: prods }] = await Promise.all([
+    sb.from('orders').select('*', { count: 'exact', head: true }),
+    sb.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'nuevo'),
+    sb.from('products').select('stock,active').eq('active', true)
+  ]);
+  const low = prods ? prods.filter(p => p.stock < 3).length : 0;
+  document.getElementById('sTotal').textContent = total ?? 0;
+  document.getElementById('sNew').textContent   = nuevo ?? 0;
+  document.getElementById('sProd').textContent  = prods?.length ?? 0;
+  document.getElementById('sLow').textContent   = low;
+}
+
+/* ── PRODUCTS ── */
+async function loadProducts() {
+  const { data } = await sb.from('products').select('*').order('created_at');
+  allProducts = data || [];
+  const tb = document.getElementById('tbProducts');
+  if (!allProducts.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="empty"><div class="ei">📦</div><p>Sin productos todavía</p></td></tr>';
+    return;
+  }
+  tb.innerHTML = allProducts.map(p => `
+    <tr>
+      <td><strong>${p.name}</strong><br/><span style="font-size:.75rem;color:var(--muted)">${p.description||''}</span></td>
+      <td>
+        <input class="ii" id="price-${p.id}" type="number" value="${p.price}"/>
+        <button class="btn-save" onclick="updateField('${p.id}','price')">✓</button>
+      </td>
+      <td>
+        <input class="ii" id="stock-${p.id}" type="number" value="${p.stock}" style="${p.stock<3?'border-color:var(--danger)':''}"/>
+        <button class="btn-save" onclick="updateField('${p.id}','stock')">✓</button>
+      </td>
+      <td><span class="badge ${p.active?'b-activo':'b-inactivo'}">${p.active?'Activo':'Inactivo'}</span></td>
+      <td>
+        <button class="btn-act" onclick="openEditModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">Editar</button>
+        <button class="btn-act" style="color:${p.active?'#fca5a5':'#6ee7b7'}" onclick="toggleActive('${p.id}',${p.active})">${p.active?'Desactivar':'Activar'}</button>
+      </td>
+    </tr>
+  `).join('');
+  // Populate inventory product select
+  const sel = document.getElementById('invProduct');
+  sel.innerHTML = allProducts.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+async function updateField(id, field) {
+  const val = parseFloat(document.getElementById(`${field}-${id}`).value);
+  if (isNaN(val) || val < 0) return;
+  await sb.from('products').update({ [field]: val }).eq('id', id);
+  loadProducts(); loadStats();
+}
+
+async function toggleActive(id, current) {
+  await sb.from('products').update({ active: !current }).eq('id', id);
+  loadProducts(); loadStats();
+}
+
+/* ── MODAL PRODUCTO ── */
+function openModal() {
+  document.getElementById('mTitle').textContent = 'Nuevo producto';
+  document.getElementById('mId').value = '';
+  ['mName','mDesc','mPrice','mStock'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('mProduct').classList.add('open');
+}
+function openEditModal(p) {
+  document.getElementById('mTitle').textContent = 'Editar producto';
+  document.getElementById('mId').value    = p.id;
+  document.getElementById('mName').value  = p.name;
+  document.getElementById('mDesc').value  = p.description || '';
+  document.getElementById('mPrice').value = p.price;
+  document.getElementById('mStock').value = p.stock;
+  document.getElementById('mProduct').classList.add('open');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function saveProduct() {
+  const id    = document.getElementById('mId').value;
+  const name  = document.getElementById('mName').value.trim();
+  const desc  = document.getElementById('mDesc').value.trim();
+  const price = parseFloat(document.getElementById('mPrice').value);
+  const stock = parseInt(document.getElementById('mStock').value);
+  if (!name || isNaN(price) || isNaN(stock)) return alert('Completá nombre, precio y stock.');
+  const slug = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  if (id) {
+    await sb.from('products').update({ name, description: desc, price, stock }).eq('id', id);
+  } else {
+    const { error } = await sb.from('products').insert({ name, slug, description: desc, price, stock });
+    if (error) return alert('Error: ' + error.message);
+  }
+  closeModal('mProduct'); loadProducts(); loadStats();
+}
+
+/* ── ORDERS ── */
+async function loadOrders() {
+  const { data } = await sb.from('orders')
+    .select('*, products(name)')
+    .order('created_at', { ascending: false });
+  allOrders = data || [];
+  renderOrders(allOrders);
+}
+
+function renderOrders(list) {
+  const tb = document.getElementById('tbOrders');
+  if (!list.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="empty"><div class="ei">📋</div><p>Sin pedidos aún</p></td></tr>';
+    return;
+  }
+  const statuses = ['nuevo','contactado','confirmado','enviado','entregado','cancelado'];
+  tb.innerHTML = list.map(o => `
+    <tr>
+      <td style="white-space:nowrap">${new Date(o.created_at).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td><strong>${o.customer_name}</strong></td>
+      <td>
+        <a href="https://wa.me/${o.customer_phone.replace(/\D/g,'')}" target="_blank" style="color:var(--sky);text-decoration:none">
+          📱 ${o.customer_phone}
+        </a>
+      </td>
+      <td>${o.products?.name || o.notes || '—'}</td>
+      <td>
+        <select class="sel-status" onchange="updateStatus('${o.id}',this.value)">
+          ${statuses.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function updateStatus(id, status) {
+  await sb.from('orders').update({ status }).eq('id', id);
+  const o = allOrders.find(x => x.id === id);
+  if (o) o.status = status;
+  loadStats();
+}
+
+function filterOrders(filter, btn) {
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrders(filter === 'all' ? allOrders : allOrders.filter(o => o.status === filter));
+}
+
+/* ── INVENTARIO ── */
+async function loadInventory() {
+  const { data } = await sb.from('inventory_movements')
+    .select('*, products(name)')
+    .order('created_at', { ascending: false })
+    .limit(100);
+  const tb = document.getElementById('tbInv');
+  if (!data?.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="empty"><div class="ei">📊</div><p>Sin movimientos registrados</p></td></tr>';
+    return;
+  }
+  tb.innerHTML = data.map(m => `
+    <tr>
+      <td style="white-space:nowrap">${new Date(m.created_at).toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'})}</td>
+      <td>${m.products?.name || '—'}</td>
+      <td><span class="badge ${m.type==='entrada'?'b-activo':'b-cancelado'}">${m.type}</span></td>
+      <td>${m.type==='entrada'?'+':'−'}${m.quantity}</td>
+      <td>${m.reason || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+function openInvModal() { document.getElementById('mInv').classList.add('open'); }
+
+async function saveMovement() {
+  const product_id = document.getElementById('invProduct').value;
+  const type       = document.getElementById('invType').value;
+  const quantity   = parseInt(document.getElementById('invQty').value);
+  const reason     = document.getElementById('invReason').value.trim();
+  if (!product_id || isNaN(quantity) || quantity < 1) return alert('Completá producto y cantidad.');
+
+  // Insert movement
+  await sb.from('inventory_movements').insert({ product_id, type, quantity, reason });
+
+  // Update product stock
+  const prod = allProducts.find(p => p.id === product_id);
+  if (prod) {
+    const newStock = type === 'entrada' ? prod.stock + quantity : Math.max(0, prod.stock - quantity);
+    await sb.from('products').update({ stock: newStock }).eq('id', product_id);
+  }
+  closeModal('mInv');
+  document.getElementById('invQty').value = '';
+  document.getElementById('invReason').value = '';
+  loadAll();
+}
+
+/* ── INIT ── */
+init();
+</script>
+</body>
+</html>
