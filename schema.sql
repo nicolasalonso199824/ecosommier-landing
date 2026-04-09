@@ -64,15 +64,15 @@ CREATE POLICY "public_insert_orders"
   ON orders FOR INSERT
   WITH CHECK (true);
 
--- Solo usuarios autenticados (admin) pueden hacer todo
-CREATE POLICY "admin_all_products"
+-- Acceso total por ahora (sin auth) — activar RLS con auth cuando esté listo
+CREATE POLICY "anon_all_products"
   ON products FOR ALL
-  USING (auth.role() = 'authenticated');
+  USING (true) WITH CHECK (true);
 
-CREATE POLICY "admin_all_orders"
+CREATE POLICY "anon_all_orders"
   ON orders FOR ALL
-  USING (auth.role() = 'authenticated');
+  USING (true) WITH CHECK (true);
 
-CREATE POLICY "admin_all_inventory"
+CREATE POLICY "anon_all_inventory"
   ON inventory_movements FOR ALL
-  USING (auth.role() = 'authenticated');
+  USING (true) WITH CHECK (true);
