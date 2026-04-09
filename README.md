@@ -22,7 +22,7 @@ El formulario de contacto envía leads a `ni_co801@hotmail.com`.
 2. Crear un nuevo formulario → copiar el ID (formato: `xyzxyzxy`)
 3. En `index.html`, buscar esta línea:
    ```html
-   action="https://formspree.io/f/REEMPLAZAR_CON_TU_ID"
+   action="https://formspree.io/f/xojpzpnk"
    ```
 4. Reemplazar `REEMPLAZAR_CON_TU_ID` con tu ID real
 5. Hacer `git push` — Vercel redeploya automaticamente
