@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url  = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const key  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
-export const supabase = createClient(url, key)
+// Cliente lazy — no lanza error si las env vars están vacías en build time
+export const supabase = url && key ? createClient(url, key) : createClient('https://placeholder.supabase.co', 'placeholder')
 
 export type Product = {
   id: string
