@@ -1047,9 +1047,14 @@ a:focus-visible,.btn-main:focus-visible,.btn-ghost:focus-visible,
     <div class="section-tag reveal">Empezá hoy</div>
     <h2 class="reveal">¿Listo para tu<br/><span>mejor noche de sueño?</span></h2>
     <p class="reveal">Dejanos tu contacto y un asesor especializado te ayuda a encontrar el colchón ideal para vos. Sin compromiso, sin presión.</p>
-    <form class="cta-form reveal" onsubmit="submitForm(event)">
-      <input type="text" placeholder="Tu nombre" required/>
-      <input type="tel" placeholder="Tu WhatsApp" required/>
+    <form class="cta-form reveal" id="contactForm"
+          action="https://formspree.io/f/xojpzpnk"
+          method="POST">
+      <!-- Formspree config -->
+      <input type="hidden" name="_subject" value="🛏️ Nuevo lead Ecosommier"/>
+      <input type="hidden" name="_replyto" value="ni_co801@hotmail.com"/>
+      <input type="text"  name="nombre"   placeholder="Tu nombre"    required autocomplete="name"/>
+      <input type="tel"   name="whatsapp" placeholder="Tu WhatsApp"  required autocomplete="tel"/>
       <button type="submit">Quiero asesoría gratis →</button>
     </form>
     <div class="cta-trust reveal">
@@ -1230,9 +1235,41 @@ document.querySelectorAll('[data-product-id]').forEach(card => {
   });
 });
 
-// Track CTA form submission
-document.querySelector('.cta-form').addEventListener('submit', () => {
-  trackEvent('generate_lead', { source: 'cta_form' });
+// CTA form — Formspree AJAX (usuario no sale de la pagina)
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('button');
+
+  // Validacion basica anti-spam
+  const nombre   = form.nombre.value.trim();
+  const whatsapp = form.whatsapp.value.trim();
+  if (nombre.length < 2 || whatsapp.length < 6) return;
+
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    });
+
+    if (res.ok) {
+      btn.textContent = '✓ ¡Te contactamos pronto!';
+      btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+      form.querySelectorAll('input').forEach(i => i.disabled = true);
+      trackEvent('generate_lead', { source: 'cta_form', nombre });
+    } else {
+      btn.textContent = 'Error, intentá de nuevo';
+      btn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
+      btn.disabled = false;
+    }
+  } catch {
+    btn.textContent = 'Sin conexión, intentá de nuevo';
+    btn.disabled = false;
+  }
 });
 
 // Track WhatsApp clicks
