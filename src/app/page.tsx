@@ -124,11 +124,11 @@ export default function Home() {
       {/* NAV */}
       <nav role="navigation" aria-label="Menú principal">
         <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
-          <Image src="/LOGO.png" alt="Ecosommier" width={140} height={70} priority style={{ objectFit: 'contain' }} />
+          <Image src="/logo-icon.png" alt="Ecosommier" width={50} height={50} priority style={{ objectFit: 'contain' }} />
         </a>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
-          {['#features','#products','#eco','#testimonials'].map((href, i) => (
-            <li key={href}><a href={href} onClick={() => setMenuOpen(false)}>{['Beneficios','Colección','Eco','Reseñas'][i]}</a></li>
+          {['#products','#eco','#testimonials'].map((href, i) => (
+            <li key={href}><a href={href} onClick={() => setMenuOpen(false)}>{['Colección','Eco','Reseñas'][i]}</a></li>
           ))}
           <li><a href="#cta" className="nav-btn" onClick={() => setMenuOpen(false)}>Consultar →</a></li>
         </ul>
@@ -141,7 +141,7 @@ export default function Home() {
       <section className="snap-section" id="hero">
         <StarField id="s-hero" />
         <div className="hero-brand-bg" aria-hidden="true">
-          <Image src="/LOGO.png" alt="" width={500} height={500} style={{ objectFit: 'contain', opacity: 0.06, filter: 'blur(2px)' }} />
+          <Image src="/logo-icon.png" alt="" width={500} height={500} style={{ objectFit: 'contain', opacity: 0.06, filter: 'blur(2px)' }} />
         </div>
         <div className="hero-content">
           <h1 className="hero-title">
@@ -168,37 +168,9 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="scroll-hint" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+        <div className="scroll-hint" onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
           <span>Descubrir</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className="snap-section" id="features">
-        <StarField id="s-feat" />
-        <div className="feat-header reveal">
-          <div className="section-tag">¿Por qué Ecosommier?</div>
-          <h2 className="section-title">El descanso que<br/><em>tu cuerpo merece</em></h2>
-        </div>
-        <div className="feat-mat-center reveal">
-          <Mattress style={{ ['--mw' as string]: '300px', ['--mh' as string]: '140px', ['--sh' as string]: '46px', animationDuration: '6s' }} />
-        </div>
-        <div className="feat-grid">
-          {[
-            ['🌙','Sueño profundo','Tecnología de capas adaptativas que elimina puntos de presión y prolonga ciclos REM.'],
-            ['🌿','Materiales naturales','Látex orgánico, algodón y lana merino. Certificaciones GOLS y GOTS incluidas.'],
-            ['🌡️','Temperatura ideal','Tejidos transpirables que regulan el calor naturalmente. Siempre a la temperatura perfecta.'],
-            ['🦴','Soporte ortopédico','Resortes ensacados con zonas diferenciadas para soporte lumbar y cervical óptimo.'],
-            ['🔇','Sin transferencia','El movimiento de tu pareja no te despierta. Cada resorte trabaja de forma independiente.'],
-            ['🔄','100 noches de prueba','Probalo en casa sin riesgo. Si no te enamora, lo retiramos sin costo.'],
-          ].map(([ico, title, desc]) => (
-            <div key={title} className="feat-card reveal">
-              <span className="feat-ico">{ico}</span>
-              <h3>{title}</h3>
-              <p>{desc}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -211,15 +183,14 @@ export default function Home() {
         </div>
         <div className="prod-grid">
           {[
-            { id: 'eco-nature', name: 'Ecosommier Nature', desc: 'Equilibrio perfecto entre suavidad y soporte. Látex natural + resortes ensacados. Para todo tipo de durmiente.', price: '$89.990', badge: 'Más vendido', badgeStyle: {}, vis: 'pv-blue', dur: '5s', delay: '0s' },
-            { id: 'eco-luxe',   name: 'Ecosommier Luxe',   desc: 'Línea de lujo. Lana merino + algodón egipcio + 1000 resortes ensacados. La experiencia más premium.',           price: '$149.990', badge: 'Premium', badgeStyle: { background: 'linear-gradient(135deg,#b8892c,#c9a84c)' }, vis: 'pv-deep',  dur: '5.5s', delay: '-.5s' },
-            { id: 'eco-ortho',  name: 'Ecosommier Ortho',  desc: 'Diseñado con fisioterapeutas. Zonas diferenciadas para soporte lumbar y cervical superior.',                      price: '$119.990', badge: 'Ortopédico', badgeStyle: { background: 'linear-gradient(135deg,#0d9488,#14b8a6)' }, vis: 'pv-night', dur: '4.8s', delay: '-.8s' },
+            { id: 'eco-platino', name: 'Ecosommier Platino', desc: 'Confort accesible con calidad Ecosommier. Ideal para empezar a dormir mejor sin resignar soporte.', price: '$89.990', badge: '', badgeStyle: {}, img: '/platino.png' },
+            { id: 'eco-confort', name: 'Ecosommier Confort', desc: 'El equilibrio perfecto entre suavidad y firmeza. Resortes ensacados y capas de alta densidad.', price: '$119.990', badge: 'Más vendido', badgeStyle: {}, img: '/confort.png' },
+            { id: 'eco-premium', name: 'Ecosommier Premium', desc: 'Nuestra línea superior. Máximo soporte, materiales de primera y terminaciones de lujo para el mejor descanso.', price: '$149.990', badge: 'Premium', badgeStyle: { background: 'linear-gradient(135deg,#b8892c,#c9a84c)' }, img: '/premium.png' },
           ].map(p => (
             <div key={p.id} className="prod-card reveal" id={p.id} data-product-id={p.id} data-product-name={p.name} data-product-price={p.price} tabIndex={0} role="article" aria-label={`${p.name} - Desde ${p.price}`}>
-              <div className={`prod-visual ${p.vis}`}>
-                <div className="mat-glow" />
-                <Mattress className="mat-sm" style={{ animationDuration: p.dur, animationDelay: p.delay }} />
-                <div className="prod-badge" style={p.badgeStyle}>{p.badge}</div>
+              <div className="prod-visual pv-blue">
+                <Image src={p.img} alt={p.name} width={320} height={200} style={{ objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(0,0,0,.4))' }} />
+                {p.badge && <div className="prod-badge" style={p.badgeStyle}>{p.badge}</div>}
               </div>
               <div className="prod-body">
                 <h3>{p.name}</h3>
@@ -308,11 +279,11 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <div className="foot-logo"><Image src="/logo.png" alt="Ecosommier" width={100} height={50} style={{ objectFit: 'contain' }} /></div>
+        <div className="foot-logo"><Image src="/logo-icon.png" alt="Ecosommier" width={40} height={40} style={{ objectFit: 'contain' }} /></div>
         <div className="foot-copy">© 2026 Ecosommier · Todos los derechos reservados</div>
         <div className="foot-links">
-          {['#features','#products','#eco','#cta'].map((href,i) => (
-            <a key={href} href={href}>{['Beneficios','Colección','Eco','Contacto'][i]}</a>
+          {['#products','#eco','#cta'].map((href,i) => (
+            <a key={href} href={href}>{['Colección','Eco','Contacto'][i]}</a>
           ))}
         </div>
       </footer>
