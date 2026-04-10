@@ -8,7 +8,7 @@ function StarField({ id }: { id: string }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!ref.current) return
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 30; i++) {
       const s = document.createElement('div')
       s.className = 'star'
       const size = Math.random() * 2.5 + .5
@@ -137,8 +137,8 @@ export default function Home() {
       {/* HERO */}
       <section className="snap-section" id="hero">
         <StarField id="s-hero" />
+        <div className="hero-brand-bg" aria-hidden="true">Ecosommier</div>
         <div className="hero-content">
-          <div className="hero-eyebrow reveal">✦ Colchones premium naturales</div>
           <h1 className="hero-title">
             <span className="reveal">Dormí mejor.</span><br/>
             <span className="line2 reveal">Viví en armonía.</span>
@@ -153,7 +153,7 @@ export default function Home() {
           <div className="hero-mat-wrap">
             <Mattress className="mat-lg" />
             <div className="hero-badges">
-              {[['🌿','100% Natural','4s','0s'],['🌙','Sueño profundo','4.5s','.6s'],['🛡️','10 años garantía','5s','1.2s']].map(([ico,txt,bf,bfd]) => (
+              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','10 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
                 <div key={txt} className="h-badge" style={{ ['--bf' as string]: bf, ['--bfd' as string]: bfd }}>
                   <span className="ico">{ico}</span><span className="txt">{txt}</span>
                 </div>
