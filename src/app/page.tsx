@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { supabase } from '@/lib/supabase'
 
 // ── Floating stars (client only) ──────────────────────
@@ -8,7 +9,7 @@ function StarField({ id }: { id: string }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!ref.current) return
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 55; i++) {
       const s = document.createElement('div')
       s.className = 'star'
       const size = Math.random() * 2.5 + .5
@@ -122,7 +123,9 @@ export default function Home() {
     <>
       {/* NAV */}
       <nav role="navigation" aria-label="Menú principal">
-        <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">Eco<span>sommier</span></a>
+        <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
+          <Image src="/logo.png" alt="Ecosommier" width={140} height={70} priority style={{ objectFit: 'contain' }} />
+        </a>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
           {['#features','#products','#eco','#testimonials'].map((href, i) => (
             <li key={href}><a href={href} onClick={() => setMenuOpen(false)}>{['Beneficios','Colección','Eco','Reseñas'][i]}</a></li>
@@ -137,8 +140,8 @@ export default function Home() {
       {/* HERO */}
       <section className="snap-section" id="hero">
         <StarField id="s-hero" />
-        <div className="hero-brand-bg" aria-hidden="true">Ecosommier</div>
         <div className="hero-content">
+          <div className="hero-eyebrow reveal">✦ Colchones premium naturales</div>
           <h1 className="hero-title">
             <span className="reveal">Dormí mejor.</span><br/>
             <span className="line2 reveal">Viví en armonía.</span>
@@ -151,9 +154,11 @@ export default function Home() {
         </div>
         <div className="hero-visual">
           <div className="hero-mat-wrap">
-            <Mattress className="mat-lg" />
+            <div className="hero-colchon-img">
+              <Image src="/colchon.png" alt="Colchón Ecosommier" width={480} height={320} priority style={{ objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(59,130,246,.3))' }} />
+            </div>
             <div className="hero-badges">
-              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','10 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
+              {[['🌿','100% Natural','4s','0s'],['🌙','Sueño profundo','4.5s','.6s'],['🛡️','10 años garantía','5s','1.2s']].map(([ico,txt,bf,bfd]) => (
                 <div key={txt} className="h-badge" style={{ ['--bf' as string]: bf, ['--bfd' as string]: bfd }}>
                   <span className="ico">{ico}</span><span className="txt">{txt}</span>
                 </div>
@@ -301,7 +306,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <div className="foot-logo">Eco<span>sommier</span></div>
+        <div className="foot-logo"><Image src="/logo.png" alt="Ecosommier" width={100} height={50} style={{ objectFit: 'contain' }} /></div>
         <div className="foot-copy">© 2026 Ecosommier · Todos los derechos reservados</div>
         <div className="foot-links">
           {['#features','#products','#eco','#cta'].map((href,i) => (
