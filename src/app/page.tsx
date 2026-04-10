@@ -39,6 +39,8 @@ function Mattress({ className = '', style = {} }: { className?: string; style?: 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [formState, setFormState] = useState<'idle'|'sending'|'ok'|'error'>('idle')
+  const [slide, setSlide] = useState(0)
+  const heroImages = ['/hero.jpg','/galeria1.jpg','/galeria2.jpg','/galeria4.jpg','/galeria5.jpg']
   const [cookieShown, setCookieShown] = useState(false)
   const nameRef  = useRef<HTMLInputElement>(null)
   const phoneRef = useRef<HTMLInputElement>(null)
@@ -124,7 +126,10 @@ export default function Home() {
       {/* NAV */}
       <nav role="navigation" aria-label="Menú principal">
         <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
-          <Image src="/logo-icon.png" alt="Ecosommier" width={50} height={50} priority style={{ objectFit: 'contain' }} />
+          <div className="logo-img-wrap">
+            <Image src="/logo.png" alt="Ecosommier" width={62} height={62} priority style={{ objectFit: 'contain' }} />
+          </div>
+          <span className="logo-name">Ecosommier</span>
         </a>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
           {['#products','#eco','#testimonials'].map((href, i) => (
@@ -140,9 +145,6 @@ export default function Home() {
       {/* HERO */}
       <section className="snap-section" id="hero">
         <StarField id="s-hero" />
-        <div className="hero-brand-bg" aria-hidden="true">
-          <Image src="/logo-icon.png" alt="" width={500} height={500} style={{ objectFit: 'contain', opacity: 0.06, filter: 'blur(2px)' }} />
-        </div>
         <div className="hero-content">
           <h1 className="hero-title">
             <span className="reveal">Dormí mejor.</span><br/>
@@ -156,11 +158,22 @@ export default function Home() {
         </div>
         <div className="hero-visual">
           <div className="hero-mat-wrap">
-            <div className="hero-colchon-img">
-              <Image src="/colchon.png" alt="Colchón Ecosommier" width={480} height={320} priority style={{ objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(59,130,246,.3))' }} />
+            <div className="hero-carousel">
+              <button className="carousel-btn" onClick={() => setSlide(i => (i - 1 + heroImages.length) % heroImages.length)} aria-label="Anterior">&#8249;</button>
+              <div>
+                <div className="hero-colchon-img">
+                  <Image src={heroImages[slide]} alt={`Colchón Ecosommier ${slide + 1}`} width={480} height={380} priority style={{ objectFit: 'cover', borderRadius: '16px', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,.5))', animation: 'floatImg 5s ease-in-out infinite' }} />
+                </div>
+                <div className="carousel-dots">
+                  {heroImages.map((_, i) => (
+                    <div key={i} className={`carousel-dot${i === slide ? ' active' : ''}`} onClick={() => setSlide(i)} />
+                  ))}
+                </div>
+              </div>
+              <button className="carousel-btn" onClick={() => setSlide(i => (i + 1) % heroImages.length)} aria-label="Siguiente">&#8250;</button>
             </div>
-            <div className="hero-badges">
-              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','10 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
+            <div className="hero-badges hero-badges-low">
+              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','5 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
                 <div key={txt} className="h-badge" style={{ ['--bf' as string]: bf, ['--bfd' as string]: bfd }}>
                   <span className="ico">{ico}</span><span className="txt">{txt}</span>
                 </div>
@@ -183,11 +196,11 @@ export default function Home() {
         </div>
         <div className="prod-grid">
           {[
-            { id: 'eco-platino', name: 'Ecosommier Platino', desc: 'Confort accesible con calidad Ecosommier. Ideal para empezar a dormir mejor sin resignar soporte.', price: '$89.990', badge: '', badgeStyle: {}, img: '/platino.png' },
-            { id: 'eco-confort', name: 'Ecosommier Confort', desc: 'El equilibrio perfecto entre suavidad y firmeza. Resortes ensacados y capas de alta densidad.', price: '$119.990', badge: 'Más vendido', badgeStyle: {}, img: '/confort.png' },
-            { id: 'eco-premium', name: 'Ecosommier Premium', desc: 'Nuestra línea superior. Máximo soporte, materiales de primera y terminaciones de lujo para el mejor descanso.', price: '$149.990', badge: 'Premium', badgeStyle: { background: 'linear-gradient(135deg,#b8892c,#c9a84c)' }, img: '/premium.png' },
+            { id: 'eco-platino', name: 'Ecosommier Platino', desc: 'Confort accesible con calidad Ecosommier. Ideal para empezar a dormir mejor sin resignar soporte.', badge: '', badgeStyle: {}, img: '/platino.png' },
+            { id: 'eco-confort', name: 'Ecosommier Confort', desc: 'El equilibrio perfecto entre suavidad y firmeza. Resortes ensacados y capas de alta densidad.', badge: 'Más vendido', badgeStyle: {}, img: '/confort.png' },
+            { id: 'eco-premium', name: 'Ecosommier Premium', desc: 'Nuestra línea superior. Máximo soporte, materiales de primera y terminaciones de lujo para el mejor descanso.', badge: 'Premium', badgeStyle: { background: 'linear-gradient(135deg,#b8892c,#c9a84c)' }, img: '/premium.png' },
           ].map(p => (
-            <div key={p.id} className="prod-card reveal" id={p.id} data-product-id={p.id} data-product-name={p.name} data-product-price={p.price} tabIndex={0} role="article" aria-label={`${p.name} - Desde ${p.price}`}>
+            <div key={p.id} className="prod-card reveal" id={p.id} data-product-id={p.id} data-product-name={p.name} tabIndex={0} role="article" aria-label={p.name}>
               <div className="prod-visual pv-blue">
                 <Image src={p.img} alt={p.name} width={320} height={200} style={{ objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(0,0,0,.4))' }} />
                 {p.badge && <div className="prod-badge" style={p.badgeStyle}>{p.badge}</div>}
@@ -196,8 +209,7 @@ export default function Home() {
                 <h3>{p.name}</h3>
                 <p>{p.desc}</p>
                 <div className="prod-footer">
-                  <div className="prod-price">Desde {p.price} <small>/ cuotas</small></div>
-                  <div className="prod-arrow">→</div>
+                  <a href={`https://wa.me/542302621528?text=${encodeURIComponent('Hola, me interesa este modelo de colchón')}`} target="_blank" rel="noopener noreferrer" className="btn-main prod-wa-btn">Consultar por WhatsApp →</a>
                 </div>
               </div>
             </div>
@@ -213,11 +225,6 @@ export default function Home() {
           <h2 className="section-title">Bien para ti.<br/><em>Bien para el planeta.</em></h2>
           <p>Cada decisión en Ecosommier está guiada por el respeto al medioambiente. Producimos localmente, usamos energía renovable y elegimos proveedores responsables.</p>
           <a href="#cta" className="btn-main">Quiero saber más</a>
-        </div>
-        <div className="eco-tiles reveal-r">
-          {[['🌱','1 árbol por colchón','Plantamos en zonas de reforestación nacional con cada venta.'],['⚡','Energía solar','100% de producción con energía fotovoltaica renovable.'],['📦','Packaging reciclado','Cero plásticos. Embalaje 100% biodegradable y compostable.'],['🤝','Comercio justo','Proveedores certificados con condiciones laborales dignas.']].map(([ico,h,d]) => (
-            <div key={h} className="eco-tile"><div className="e-ico">{ico}</div><h4>{h}</h4><p>{d}</p></div>
-          ))}
         </div>
       </section>
 
@@ -279,7 +286,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <div className="foot-logo"><Image src="/logo-icon.png" alt="Ecosommier" width={40} height={40} style={{ objectFit: 'contain' }} /></div>
+        <div className="foot-logo"><Image src="/logo.png" alt="Ecosommier" width={90} height={90} style={{ objectFit: 'contain', mixBlendMode: 'screen', filter: 'invert(1)' }} /></div>
         <div className="foot-copy">© 2026 Ecosommier · Todos los derechos reservados</div>
         <div className="foot-links">
           {['#products','#eco','#cta'].map((href,i) => (
@@ -289,7 +296,7 @@ export default function Home() {
       </footer>
 
       {/* WA */}
-      <a className="wa-float" href="https://wa.me/5491100000000?text=Hola%21%20Me%20interesa%20un%20colch%C3%B3n%20Ecosommier" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">💬</a>
+      <a className="wa-float" href={`https://wa.me/542302621528?text=${encodeURIComponent('Hola, me interesa este modelo de colchón')}`} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">💬</a>
 
       {/* COOKIE */}
       <div className={`cookie-banner${cookieShown ? ' show' : ''}`} role="dialog" aria-label="Aviso de cookies">
