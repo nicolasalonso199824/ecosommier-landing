@@ -51,8 +51,9 @@ nav {
 }
 .logo {
   display: flex; align-items: center; text-decoration: none;
+  background: rgba(255,255,255,.9); border-radius: 10px; padding: 4px 8px;
 }
-.logo img { height: 44px; width: auto; }
+.logo img { height: 40px; width: auto; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
 .nav-links a { text-decoration: none; color: var(--muted); font-size: .88rem; font-weight: 500; transition: color .2s; }
 .nav-links a:hover { color: var(--white); }
@@ -77,12 +78,12 @@ nav {
 .stars-canvas { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .star {
   position: absolute; border-radius: 50%;
-  background: rgba(147,197,253,.7);
+  background: rgba(147,197,253,.5);
   animation: twinkle var(--d, 3s) var(--dl, 0s) ease-in-out infinite alternate;
 }
 @keyframes twinkle {
-  from { opacity: .1; transform: scale(.8); }
-  to   { opacity: .8; transform: scale(1.2); }
+  from { opacity: .05; transform: scale(.9); }
+  to   { opacity: .45; transform: scale(1.1); }
 }
 
 /* ─── MATTRESS ─── */
@@ -96,7 +97,7 @@ nav {
   background: linear-gradient(135deg, var(--offwht) 0%, #dbeafe 60%, #bfdbfe 100%);
   border-radius: 14px;
   transform: rotateX(18deg) rotateY(-22deg) translateZ(0);
-  box-shadow: 0 0 60px rgba(59,130,246,.25), inset 0 0 30px rgba(255,255,255,.15);
+  box-shadow: 0 0 35px rgba(59,130,246,.15), inset 0 0 18px rgba(255,255,255,.08);
   overflow: hidden;
 }
 .mat-top::before {
@@ -122,11 +123,11 @@ nav {
 .l4 { background: linear-gradient(90deg,#1d4ed8,#3b82f6); --lw:60px; }
 .mat-glow {
   position: absolute; inset: -40px;
-  background: radial-gradient(ellipse,rgba(59,130,246,.22) 0%,transparent 65%);
+  background: radial-gradient(ellipse,rgba(59,130,246,.1) 0%,transparent 65%);
   pointer-events: none; border-radius: 50%;
-  animation: glowPulse 4s ease-in-out infinite alternate;
+  animation: glowPulse 5s ease-in-out infinite alternate;
 }
-@keyframes glowPulse { from{opacity:.5;transform:scale(.9);} to{opacity:1;transform:scale(1.1);} }
+@keyframes glowPulse { from{opacity:.3;transform:scale(.95);} to{opacity:.6;transform:scale(1.05);} }
 .mat-sm { --mw:220px; --mh:100px; --sh:34px; }
 .mat-lg { --mw:420px; --mh:190px; --sh:64px; }
 
@@ -137,6 +138,10 @@ nav {
               radial-gradient(ellipse 40% 40% at 20% 80%, rgba(147,197,253,.08), transparent),
               var(--navy);
   gap: 0;
+}
+.hero-brand-bg {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none; user-select: none; z-index: 0;
 }
 .hero-content { flex: 1; max-width: 560px; padding-right: 2rem; z-index: 2; }
 .hero-eyebrow {

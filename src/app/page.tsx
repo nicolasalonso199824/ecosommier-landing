@@ -9,7 +9,7 @@ function StarField({ id }: { id: string }) {
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!ref.current) return
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 30; i++) {
       const s = document.createElement('div')
       s.className = 'star'
       const size = Math.random() * 2.5 + .5
@@ -124,7 +124,7 @@ export default function Home() {
       {/* NAV */}
       <nav role="navigation" aria-label="Menú principal">
         <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
-          <Image src="/logo.png" alt="Ecosommier" width={140} height={70} priority style={{ objectFit: 'contain' }} />
+          <Image src="/LOGO.png" alt="Ecosommier" width={140} height={70} priority style={{ objectFit: 'contain' }} />
         </a>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
           {['#features','#products','#eco','#testimonials'].map((href, i) => (
@@ -140,8 +140,10 @@ export default function Home() {
       {/* HERO */}
       <section className="snap-section" id="hero">
         <StarField id="s-hero" />
+        <div className="hero-brand-bg" aria-hidden="true">
+          <Image src="/LOGO.png" alt="" width={500} height={500} style={{ objectFit: 'contain', opacity: 0.06, filter: 'blur(2px)' }} />
+        </div>
         <div className="hero-content">
-          <div className="hero-eyebrow reveal">✦ Colchones premium naturales</div>
           <h1 className="hero-title">
             <span className="reveal">Dormí mejor.</span><br/>
             <span className="line2 reveal">Viví en armonía.</span>
@@ -158,7 +160,7 @@ export default function Home() {
               <Image src="/colchon.png" alt="Colchón Ecosommier" width={480} height={320} priority style={{ objectFit: 'contain', filter: 'drop-shadow(0 20px 40px rgba(59,130,246,.3))' }} />
             </div>
             <div className="hero-badges">
-              {[['🌿','100% Natural','4s','0s'],['🌙','Sueño profundo','4.5s','.6s'],['🛡️','10 años garantía','5s','1.2s']].map(([ico,txt,bf,bfd]) => (
+              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','10 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
                 <div key={txt} className="h-badge" style={{ ['--bf' as string]: bf, ['--bfd' as string]: bfd }}>
                   <span className="ico">{ico}</span><span className="txt">{txt}</span>
                 </div>
