@@ -1120,7 +1120,14 @@ a:focus-visible,.btn-main:focus-visible,.btn-ghost:focus-visible,
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ── SUPABASE ── */
+const _sb = supabase.createClient(
+  'https://ocoqkvrksupcpxjobpeo.supabase.co',
+  'sb_publishable_KZeWlBwlsJkOGjoGm29EZQ_RzhCzm9x'
+);
+
 /* ── STAR FIELDS ── */
 function buildStars(canvasId, count = 55) {
   const c = document.getElementById(canvasId);
@@ -1292,6 +1299,13 @@ document.getElementById('contactForm').addEventListener('submit', async (e) => {
       btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
       form.querySelectorAll('input').forEach(i => i.disabled = true);
       trackEvent('generate_lead', { source: 'cta_form', nombre });
+      // Guardar lead en Supabase (sin bloquear la UI)
+      _sb.from('orders').insert({
+        customer_name:  nombre,
+        customer_phone: whatsapp,
+        status: 'nuevo',
+        source: 'landing'
+      }).then(({ error }) => { if (error) console.warn('Supabase:', error.message); });
     } else {
       btn.textContent = 'Error, intentá de nuevo';
       btn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
