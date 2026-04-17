@@ -625,125 +625,39 @@ nav {
 
 .measure-picker {
   display: grid;
-  gap: 1rem;
+  gap: 1.4rem;
 }
 
-.measure-select {
-  display: grid;
-  gap: 0;
-  max-width: 420px;
-}
-
-.measure-select-trigger {
+.measure-chip-row {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.measure-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem 1.15rem;
-  border-radius: 20px;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 23, 40, 0.8);
-  color: var(--white);
-  cursor: pointer;
-  text-align: left;
-  box-shadow: var(--shadow-md);
-  transition: border-color 0.2s ease, background 0.2s ease;
-}
-
-.measure-select-trigger:hover,
-.measure-select.open .measure-select-trigger {
-  border-color: rgba(169, 200, 255, 0.34);
-  background: linear-gradient(180deg, rgba(28, 48, 78, 0.88), rgba(12, 23, 40, 0.92));
-}
-
-.measure-select-copy {
-  display: grid;
-  gap: 0.28rem;
-}
-
-.measure-select-kicker {
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.measure-select-value {
-  color: var(--white);
-  font-size: 0.94rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
-.measure-select-icon {
-  flex-shrink: 0;
-  color: var(--blue-soft);
-  font-size: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.measure-select.open .measure-select-icon {
-  transform: rotate(180deg);
-}
-
-.measure-select-menu {
-  display: grid;
-  gap: 0.55rem;
-  max-height: 0;
-  margin-top: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.25s ease, margin-top 0.25s ease, opacity 0.2s ease;
-}
-
-.measure-select.open .measure-select-menu {
-  max-height: 420px;
-  margin-top: 0.75rem;
-  opacity: 1;
-}
-
-.measure-option {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: 100%;
-  padding: 0.9rem 1rem;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 23, 40, 0.74);
+  background: rgba(12, 23, 40, 0.68);
   color: var(--muted-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
-  text-align: left;
   transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.measure-option:hover,
-.measure-option.active {
+.measure-chip:hover,
+.measure-chip.active {
   transform: translateY(-2px);
-  border-color: rgba(169, 200, 255, 0.32);
-  background: rgba(22, 40, 66, 0.9);
+  border-color: rgba(169, 200, 255, 0.34);
+  background: linear-gradient(180deg, rgba(28, 48, 78, 0.88), rgba(12, 23, 40, 0.92));
   color: var(--white);
-}
-
-.measure-option-name,
-.measure-option-label {
-  display: block;
-}
-
-.measure-option-name {
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-
-.measure-option-label {
-  color: rgba(255, 255, 255, 0.58);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 .measure-panel {
@@ -1001,25 +915,11 @@ nav {
   background: radial-gradient(circle at 82% 18%, rgba(79, 134, 255, 0.12), transparent 24%);
 }
 
-.reviews-stage {
-  display: grid;
-  justify-items: center;
-  gap: 1.1rem;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-.reviews-stage .section-head {
-  width: 100%;
-  margin-bottom: 0;
-  text-align: center;
-}
-
 .metrics-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
-  margin: 0 auto;
+  margin-bottom: 1.25rem;
   max-width: 240px;
 }
 
@@ -1050,7 +950,6 @@ nav {
   grid-template-columns: 48px minmax(0, 1fr) 48px;
   align-items: center;
   gap: 1rem;
-  width: 100%;
 }
 
 .review-shot {
@@ -1530,23 +1429,14 @@ summary:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .measure-select {
-    max-width: none;
+  .measure-chip-row {
+    gap: 0.55rem;
   }
 
-  .measure-select-trigger {
-    padding: 0.92rem 1rem;
-    border-radius: 18px;
-  }
-
-  .measure-select-value {
-    font-size: 0.88rem;
-  }
-
-  .measure-option {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.3rem;
+  .measure-chip {
+    width: 100%;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .measure-visual-stage,
@@ -1576,10 +1466,6 @@ summary:focus-visible {
   .reviews-carousel {
     grid-template-columns: 42px minmax(0, 1fr) 42px;
     gap: 0.55rem;
-  }
-
-  .reviews-stage {
-    gap: 0.9rem;
   }
 
   .step-card,
