@@ -21,10 +21,10 @@ const products = [
     tone: 'tone-silver',
     image: '/platino.png',
     specs: [
-      'Tapa en tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Tapa en tela tejida de punto o jacquard plus matelaseada, con banda matelaseada en tela jacquard y vivos perimetrales.',
       'Marco perimetral de espuma de 26 kg/m3 de densidad.',
-      'Placa de espuma superior e inferior de 24 kg/m3 de densidad aislada con tela de fibra.',
-      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+      'Placa superior e inferior de espuma de 24 kg/m3, aislada con tela de fibra.',
+      'Resortes bicónicos tipo Bonell, con sistema solidario reforzado y 13 columnas de espuma de alta densidad.',
     ],
     message: 'Hola, quiero consultar por Ecosommier Platino y saber si es el modelo indicado para mí.',
   },
@@ -35,10 +35,10 @@ const products = [
     tone: 'tone-blue',
     image: '/confort.png',
     specs: [
-      'Tapa en tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Tapa en tela tejida de punto o jacquard plus matelaseada, con banda matelaseada en tela jacquard y vivos perimetrales.',
       'Marco perimetral de espuma de 28 kg/m3 de densidad.',
-      'Placa de espuma superior e inferior de 28 kg/m3 aislada con tela de fibra.',
-      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+      'Placa superior e inferior de espuma de 28 kg/m3, aislada con tela de fibra.',
+      'Resortes bicónicos tipo Bonell, con sistema solidario reforzado y 13 columnas de espuma de alta densidad.',
     ],
     message: 'Hola, quiero consultar por Ecosommier Confort y saber si es el modelo que mejor me conviene.',
   },
@@ -49,10 +49,10 @@ const products = [
     tone: 'tone-gold',
     image: '/premium.png',
     specs: [
-      'Tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Tela tejida de punto o jacquard plus matelaseada, con banda matelaseada en tela jacquard y vivos perimetrales.',
       'Marco perimetral de espuma de 35 kg/m3 de densidad.',
-      'Placa de espuma superior e inferior de 35 kg/m3 aislada con tela de fibra.',
-      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+      'Placa superior e inferior de espuma de 35 kg/m3, aislada con tela de fibra.',
+      'Resortes bicónicos tipo Bonell, con sistema solidario reforzado y 13 columnas de espuma de alta densidad.',
     ],
     message: 'Hola, quiero consultar por Ecosommier Premium y conocer medidas, terminaciones y opciones.',
   },
@@ -154,10 +154,11 @@ const metrics = [
 ]
 
 const testimonialGallery = [
-  { src: '/testimonios-nuevos/cliente-1.jpeg', alt: 'Cliente feliz Ecosommier 1' },
-  { src: '/testimonios-nuevos/cliente-2.jpeg', alt: 'Cliente feliz Ecosommier 2' },
-  { src: '/testimonios-nuevos/cliente-3.jpeg', alt: 'Cliente feliz Ecosommier 3' },
-  { src: '/testimonios-nuevos/cliente-4.jpeg', alt: 'Cliente feliz Ecosommier 4' },
+  { src: '/testimonios-nuevos/cliente-real-1.jpeg', alt: 'Cliente feliz Ecosommier 1' },
+  { src: '/testimonios-nuevos/cliente-real-2.jpeg', alt: 'Cliente feliz Ecosommier 2' },
+  { src: '/testimonios-nuevos/cliente-real-3.jpeg', alt: 'Cliente feliz Ecosommier 3' },
+  { src: '/testimonios-nuevos/cliente-real-4.jpeg', alt: 'Cliente feliz Ecosommier 4' },
+  { src: '/testimonios-nuevos/cliente-real-5.jpeg', alt: 'Cliente feliz Ecosommier 5' },
 ]
 
 function StarField({ id }: { id: string }) {
@@ -511,6 +512,7 @@ export default function Home() {
             <div className="reviews-stage">
               <div className="section-head reveal">
                 <h2 className="section-title">Clientes felices,<br /><em>compras reales.</em></h2>
+                <p className="section-copy review-copy">Fotos compartidas por clientes después de recibir su Ecosommier en casa.</p>
               </div>
 
               <div className="metrics-grid reveal">
@@ -532,16 +534,20 @@ export default function Home() {
                 <button className="carousel-btn review-nav" onClick={nextReviewSlide} aria-label="Siguiente testimonio" type="button">&#8250;</button>
               </div>
 
-              <div className="review-dots reveal" role="tablist" aria-label="Clientes felices">
+              <div className="review-thumbs reveal" role="tablist" aria-label="Clientes felices">
                 {testimonialGallery.map((item, index) => (
                   <button
                     key={item.src}
-                    className={`carousel-dot${index === reviewSlide ? ' active' : ''}`}
+                    className={`review-thumb${index === reviewSlide ? ' active' : ''}`}
                     onClick={() => goToReviewSlide(index)}
                     aria-label={`Ver cliente ${index + 1}`}
                     aria-pressed={index === reviewSlide}
                     type="button"
-                  />
+                  >
+                    <span className="review-thumb-frame">
+                      <Image src={item.src} alt={item.alt} width={260} height={360} style={{ objectFit: 'contain' }} />
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -552,7 +558,7 @@ export default function Home() {
           <div className="section-shell">
             <div className="section-head reveal">
               <div className="section-tag">Redes y contacto</div>
-              <h2 className="section-title">Seguinos donde<br /><em>más pasa todo.</em></h2>
+              <h2 className="section-title">Seguinos donde<br /><em>se ve todo.</em></h2>
             </div>
 
             <div className="social-grid">
