@@ -428,7 +428,7 @@ export default function Home() {
                           width={1217}
                           height={1600}
                           className="measure-photo"
-                          style={{ transform: `translateY(${selectedMeasure.photoShiftY}) scale(${selectedMeasure.photoScale})` }}
+                          style={{ ['--measure-photo-transform' as string]: `translateY(${selectedMeasure.photoShiftY}) scale(${selectedMeasure.photoScale})` }}
                         />
                       </div>
                     ) : (
@@ -493,7 +493,7 @@ export default function Home() {
             <div className="experience-side reveal-r">
               <div className="steps-grid">
                 {serviceSteps.map((item) => (
-                  <div key={item.step} className="step-card">
+                  <div key={item.step} className="step-card reveal">
                     <span className="step-index">{item.step}</span>
                     <h3>{item.title}</h3>
                     <p>{item.copy}</p>
@@ -515,7 +515,7 @@ export default function Home() {
 
               <div className="metrics-grid reveal">
                 {metrics.map((metric) => (
-                  <div key={metric.label} className="metric-card">
+                  <div key={metric.label} className="metric-card reveal">
                     <div className="metric-value">{metric.value}</div>
                     <div className="metric-label">{metric.label}</div>
                   </div>

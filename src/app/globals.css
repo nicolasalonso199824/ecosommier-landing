@@ -343,6 +343,8 @@ nav {
   border-radius: var(--radius-xl);
   background: linear-gradient(180deg, rgba(15, 28, 47, 0.68), rgba(8, 16, 29, 0.78));
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+  animation: panel-float 7.5s ease-in-out infinite;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .hero-frame::before {
@@ -362,6 +364,12 @@ nav {
   gap: 0.85rem;
 }
 
+.hero-frame:hover {
+  transform: translateY(-4px);
+  border-color: rgba(169, 200, 255, 0.18);
+  box-shadow: 0 28px 56px rgba(0, 0, 0, 0.28);
+}
+
 .hero-media {
   overflow: hidden;
   border-radius: 24px;
@@ -373,6 +381,12 @@ nav {
   width: 100%;
   height: 460px;
   object-fit: cover;
+  transition: transform 0.55s ease, filter 0.35s ease;
+}
+
+.hero-frame:hover .hero-media img {
+  transform: scale(1.025);
+  filter: saturate(1.04);
 }
 
 .carousel-btn {
@@ -524,6 +538,12 @@ nav {
   object-position: center bottom;
   transform: translateY(16px);
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.14));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.prod-card:hover .prod-visual img {
+  transform: translateY(10px) scale(1.025);
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.2));
 }
 
 .tone-silver {
@@ -801,6 +821,7 @@ nav {
   align-items: flex-end;
   justify-content: center;
   padding-bottom: 0.8rem;
+  transition: transform 0.35s ease;
 }
 
 .measure-photo-wrap::after,
@@ -822,9 +843,14 @@ nav {
   height: auto;
   max-height: 320px;
   object-fit: contain;
+  transform: var(--measure-photo-transform);
   transform-origin: center center;
   transition: transform 0.35s ease;
   filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.22));
+}
+
+.measure-visual-stage:hover .measure-photo-wrap {
+  transform: translateY(-5px);
 }
 
 .measure-placeholder {
@@ -966,6 +992,13 @@ nav {
   min-height: 220px;
   padding: 1.3rem;
   border-radius: 22px;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(169, 200, 255, 0.16);
+  box-shadow: 0 24px 42px rgba(0, 0, 0, 0.22);
 }
 
 .step-index {
@@ -1027,6 +1060,12 @@ nav {
   padding: 1.2rem;
   border-radius: 22px;
   text-align: center;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(169, 200, 255, 0.18);
 }
 
 .metric-value {
@@ -1070,6 +1109,12 @@ nav {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 23, 40, 0.84);
   box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-shot-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 42px rgba(0, 0, 0, 0.24);
 }
 
 .review-shot-frame::after {
@@ -1121,6 +1166,13 @@ nav {
   background: rgba(12, 23, 40, 0.84);
   box-shadow: var(--shadow-md);
   text-decoration: none;
+  transition: transform 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
+}
+
+.social-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(169, 200, 255, 0.16);
+  box-shadow: 0 24px 42px rgba(0, 0, 0, 0.22);
 }
 
 .social-icon {
@@ -1192,6 +1244,13 @@ nav {
   border: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
   text-decoration: none;
+  transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.contact-line:hover {
+  transform: translateY(-2px);
+  border-color: rgba(169, 200, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .contact-icon {
@@ -1383,6 +1442,59 @@ nav {
 .reveal-r.visible {
   opacity: 1;
   transform: none;
+}
+
+.prod-grid > .reveal:nth-child(1),
+.steps-grid > .reveal:nth-child(1),
+.social-grid > .reveal:nth-child(1) {
+  transition-delay: 0.04s;
+}
+
+.prod-grid > .reveal:nth-child(2),
+.steps-grid > .reveal:nth-child(2),
+.social-grid > .reveal:nth-child(2) {
+  transition-delay: 0.11s;
+}
+
+.prod-grid > .reveal:nth-child(3),
+.steps-grid > .reveal:nth-child(3),
+.social-grid > .reveal:nth-child(3) {
+  transition-delay: 0.18s;
+}
+
+@keyframes panel-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-frame,
+  .star,
+  .reveal,
+  .reveal-l,
+  .reveal-r,
+  .prod-visual img,
+  .hero-media img,
+  .measure-photo-wrap,
+  .measure-photo,
+  .step-card,
+  .metric-card,
+  .social-card,
+  .contact-line,
+  .review-shot-frame {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 a:focus-visible,
