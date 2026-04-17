@@ -1,309 +1,634 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { startTransition, useEffect, useState } from 'react'
 import Image from 'next/image'
-import { supabase } from '@/lib/supabase'
 
-// ── Floating stars (client only) ──────────────────────
+const whatsappNumber = '542302621528'
+const callNumber = '+542302628744'
+const externalLinkProps = { target: '_blank', rel: 'noopener noreferrer' } as const
+const instagramUrl = 'https://www.instagram.com/ecosommier?igsh=dm5yZ2hkN3lrOThs'
+const facebookUrl = 'https://www.facebook.com/share/18LpEui3eJ/?mibextid=wwXIfr'
+
+const whatsappHref = (message: string) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
+
+const heroImages = ['/hero.jpg', '/galeria1.jpg', '/galeria4.jpg']
+
+const products = [
+  {
+    id: 'eco-platino',
+    name: 'Ecosommier Platino',
+    badge: 'Densidad media',
+    tone: 'tone-silver',
+    image: '/platino.png',
+    specs: [
+      'Tapa en tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Marco perimetral de espuma de 26 kg/m3 de densidad.',
+      'Placa de espuma superior e inferior de 24 kg/m3 de densidad aislada con tela de fibra.',
+      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+    ],
+    message: 'Hola, quiero consultar por Ecosommier Platino y saber si es el modelo indicado para mí.',
+  },
+  {
+    id: 'eco-confort',
+    name: 'Ecosommier Confort',
+    badge: 'Densidad alta',
+    tone: 'tone-blue',
+    image: '/confort.png',
+    specs: [
+      'Tapa en tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Marco perimetral de espuma de 28 kg/m3 de densidad.',
+      'Placa de espuma superior e inferior de 28 kg/m3 aislada con tela de fibra.',
+      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+    ],
+    message: 'Hola, quiero consultar por Ecosommier Confort y saber si es el modelo que mejor me conviene.',
+  },
+  {
+    id: 'eco-premium',
+    name: 'Ecosommier Premium',
+    badge: 'Densidad extrema',
+    tone: 'tone-gold',
+    image: '/premium.png',
+    specs: [
+      'Tela tejido de punto o jackard plus matelasseada y banda matelasseada en tela jackard, cerrado con vivos perimetrales.',
+      'Marco perimetral de espuma de 35 kg/m3 de densidad.',
+      'Placa de espuma superior e inferior de 35 kg/m3 aislada con tela de fibra.',
+      'Resortes biconicos tipo Bonell con sistema solidario reforzado con 13 columnas de espuma de alta densidad.',
+    ],
+    message: 'Hola, quiero consultar por Ecosommier Premium y conocer medidas, terminaciones y opciones.',
+  },
+]
+
+const measureOptions = [
+  {
+    id: '1x190x30',
+    label: '1 x 190 x 30',
+    name: '1 plaza',
+    width: '100 cm',
+    length: '190 cm',
+    height: '30 cm',
+    summary: 'La medida justa para habitaciones compactas, adolescentes o espacios donde cada centímetro importa.',
+    ideal: 'Perfecta para uso individual y cuartos con circulación más libre.',
+    image: '/measures/100x190x30.jpeg',
+    photoWidth: '470px',
+    photoScale: 1.12,
+    photoShiftY: '8px',
+  },
+  {
+    id: '140x190x30',
+    label: '140 x 190 x 30',
+    name: 'Matrimonial',
+    width: '140 cm',
+    length: '190 cm',
+    height: '30 cm',
+    summary: 'Una opción equilibrada para parejas que quieren más comodidad sin pasar a un formato demasiado grande.',
+    ideal: 'Ideal para dormitorios medianos y una compra práctica con look premium.',
+    image: '/measures/140x190x30.jpeg',
+    photoWidth: '485px',
+    photoScale: 1.08,
+    photoShiftY: '6px',
+  },
+  {
+    id: '160x190x30',
+    label: '160 x 190 x 30',
+    name: 'Queen',
+    width: '160 cm',
+    length: '190 cm',
+    height: '30 cm',
+    summary: 'La medida más versátil para quienes quieren amplitud real y una experiencia de descanso más cómoda.',
+    ideal: 'Excelente para parejas que priorizan confort diario y mejor presencia visual.',
+    image: '/measures/160x190x30.jpeg',
+    photoWidth: '500px',
+    photoScale: 1.06,
+    photoShiftY: '4px',
+  },
+  {
+    id: '180x190x30',
+    label: '180 x 190 x 30',
+    name: 'King',
+    width: '180 cm',
+    length: '190 cm',
+    height: '30 cm',
+    summary: 'Más superficie, más libertad al dormir y una presencia fuerte para dormitorios principales.',
+    ideal: 'Recomendada para quienes comparten cama y quieren espacio sin resignar estética.',
+    image: '/measures/180x190x30.jpeg',
+    photoWidth: '495px',
+    photoScale: 1.1,
+    photoShiftY: '8px',
+  },
+  {
+    id: '2x2x30',
+    label: '2 x 2 x 30',
+    name: 'Super King',
+    width: '200 cm',
+    length: '200 cm',
+    height: '30 cm',
+    summary: 'La opción más amplia de la línea para una experiencia de descanso superior, con escala y presencia premium.',
+    ideal: 'Pensada para quienes quieren el máximo nivel de amplitud y confort.',
+    image: '/measures/2x2x30.jpeg',
+    photoWidth: '510px',
+    photoScale: 1.1,
+    photoShiftY: '10px',
+  },
+] as const
+
+const serviceSteps = [
+  {
+    step: '01',
+    title: 'Nos escribís por WhatsApp',
+    copy: 'Contanos cómo dormís, si compartís cama, qué medida buscás y qué presupuesto querés explorar.',
+  },
+  {
+    step: '02',
+    title: 'Te recomendamos el modelo correcto',
+    copy: 'No te dejamos solo con un catálogo. Te guiamos hacia la opción con más sentido para vos.',
+  },
+  {
+    step: '03',
+    title: 'Coordinamos compra y entrega',
+    copy: 'Seguimos con vos hasta resolver precios, financiación, tiempos y cualquier duda final.',
+  },
+]
+
+const metrics = [
+  { value: '500+', label: 'Hogares acompañados' },
+]
+
+const testimonialGallery = [
+  { src: '/testimonios-nuevos/cliente-1.jpeg', alt: 'Cliente feliz Ecosommier 1' },
+  { src: '/testimonios-nuevos/cliente-2.jpeg', alt: 'Cliente feliz Ecosommier 2' },
+  { src: '/testimonios-nuevos/cliente-3.jpeg', alt: 'Cliente feliz Ecosommier 3' },
+  { src: '/testimonios-nuevos/cliente-4.jpeg', alt: 'Cliente feliz Ecosommier 4' },
+]
+
 function StarField({ id }: { id: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    if (!ref.current) return
-    for (let i = 0; i < 30; i++) {
-      const s = document.createElement('div')
-      s.className = 'star'
-      const size = Math.random() * 2.5 + .5
-      s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${2+Math.random()*4}s;--dl:${Math.random()*4}s`
-      ref.current.appendChild(s)
-    }
-  }, [])
-  return <div className="stars-canvas" id={id} ref={ref} />
-}
-
-// ── Mattress component ─────────────────────────────────
-function Mattress({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) {
-  return (
-    <div className={`mattress ${className}`} style={style}>
-      <div className="mat-top">
-        <div className="mat-layers">
-          <div className="mat-layer l1" /><div className="mat-layer l2" />
-          <div className="mat-layer l3" /><div className="mat-layer l4" />
-        </div>
-      </div>
-      <div className="mat-side" />
-      <div className="mat-glow" />
-    </div>
-  )
+  return <div className="stars-canvas" id={id} aria-hidden="true" />
 }
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [formState, setFormState] = useState<'idle'|'sending'|'ok'|'error'>('idle')
   const [slide, setSlide] = useState(0)
-  const heroImages = ['/hero.jpg','/galeria1.jpg','/galeria2.jpg','/galeria4.jpg','/galeria5.jpg']
+  const [reviewSlide, setReviewSlide] = useState(0)
+  const [measureIndex, setMeasureIndex] = useState(2)
+  const [isMeasureMenuOpen, setIsMeasureMenuOpen] = useState(false)
   const [cookieShown, setCookieShown] = useState(false)
-  const nameRef  = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
-  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID
+  const selectedMeasure = measureOptions[measureIndex]
 
-  // Scroll reveal
   useEffect(() => {
-    const ro = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 90)
-          ro.unobserve(e.target)
-        }
+    const fields = document.querySelectorAll<HTMLElement>('.stars-canvas')
+
+    fields.forEach((field) => {
+      for (let i = 0; i < 22; i += 1) {
+        const star = document.createElement('div')
+        const size = Math.random() * 2.4 + 0.6
+        star.className = 'star'
+        star.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${size}px;height:${size}px;--d:${2 + Math.random() * 4}s;--dl:${Math.random() * 4}s`
+        field.appendChild(star)
+      }
+    })
+
+    return () => {
+      fields.forEach((field) => {
+        field.innerHTML = ''
       })
-    }, { threshold: 0.1 })
-    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => ro.observe(el))
-    return () => ro.disconnect()
-  }, [])
-
-  // Cookie banner
-  useEffect(() => {
-    if (!localStorage.getItem('eco_cookie_consent')) {
-      setTimeout(() => setCookieShown(true), 1500)
     }
   }, [])
 
-  // Product card tilt
   useEffect(() => {
-    const cards = document.querySelectorAll<HTMLElement>('.prod-card')
-    const handlers: Array<{ el: HTMLElement; mm: (e: MouseEvent) => void; ml: () => void }> = []
-    cards.forEach(card => {
-      const mm = (e: MouseEvent) => {
-        const r = card.getBoundingClientRect()
-        const x = (e.clientX - r.left) / r.width  - .5
-        const y = (e.clientY - r.top)  / r.height - .5
-        card.style.transform = `translateY(-10px) scale(1.02) rotateX(${-y*8}deg) rotateY(${x*8}deg)`
-      }
-      const ml = () => { card.style.transform = ''; card.style.transition = 'transform .5s ease'; setTimeout(() => { card.style.transition = '' }, 500) }
-      card.addEventListener('mousemove', mm)
-      card.addEventListener('mouseleave', ml)
-      handlers.push({ el: card, mm, ml })
-    })
-    return () => handlers.forEach(({ el, mm, ml }) => { el.removeEventListener('mousemove', mm); el.removeEventListener('mouseleave', ml) })
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (!entry.isIntersecting) return
+        window.setTimeout(() => entry.target.classList.add('visible'), index * 80)
+        observer.unobserve(entry.target)
+      })
+    }, { threshold: 0.12 })
+
+    document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
   }, [])
 
-  // Close menu on resize
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-  }, [menuOpen])
+    if (localStorage.getItem('eco_cookie_consent')) return
+    const timeoutId = window.setTimeout(() => setCookieShown(true), 1200)
+    return () => window.clearTimeout(timeoutId)
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const nombre   = nameRef.current?.value.trim() ?? ''
-    const whatsapp = phoneRef.current?.value.trim() ?? ''
-    if (nombre.length < 2 || whatsapp.length < 6) return
-    setFormState('sending')
-    try {
-      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: new FormData(e.target as HTMLFormElement),
-      })
-      if (res.ok) {
-        setFormState('ok')
-        supabase.from('orders').insert({ customer_name: nombre, customer_phone: whatsapp, status: 'nuevo', source: 'landing' })
-          .then(({ error }) => { if (error) console.warn('Supabase:', error.message) })
-      } else { setFormState('error') }
-    } catch { setFormState('error') }
+  const goToSlide = (nextIndex: number) => {
+    startTransition(() => setSlide(nextIndex))
   }
 
-  const testimonials = [
-    { q: '"Nunca pensé que un colchón podría cambiar tanto mi calidad de vida. Duermo 8 horas de corrido y me levanto sin dolores."', name: 'María González', city: 'Buenos Aires', i: 'M' },
-    { q: '"Las 100 noches de prueba me dieron tranquilidad total. No lo devolvería por nada."', name: 'Carlos Méndez', city: 'Córdoba', i: 'C' },
-    { q: '"Suave para mí, firme para mi marido. El Nature resuelve los dos estilos perfectamente."', name: 'Laura Ríos', city: 'Rosario', i: 'L' },
-    { q: '"Llevaba años con dolor lumbar. Con el Ortho desapareció en la primera semana."', name: 'Javier Ortiz', city: 'Mendoza', i: 'J' },
-    { q: '"El Luxe es una obra de arte. La calidad se siente desde el primer contacto."', name: 'Sofía Bermúdez', city: 'Mar del Plata', i: 'S' },
-    { q: '"La entrega fue rapidísima, instalaron todo y se llevaron el colchón viejo. 10/10."', name: 'Roberto Sanz', city: 'Tucumán', i: 'R' },
-  ]
-  const testiDouble = [...testimonials, ...testimonials]
+  const nextSlide = () => {
+    startTransition(() => setSlide((current) => (current + 1) % heroImages.length))
+  }
+
+  const previousSlide = () => {
+    startTransition(() => setSlide((current) => (current - 1 + heroImages.length) % heroImages.length))
+  }
+
+  const nextReviewSlide = () => {
+    startTransition(() => setReviewSlide((current) => (current + 1) % testimonialGallery.length))
+  }
+
+  const previousReviewSlide = () => {
+    startTransition(() => setReviewSlide((current) => (current - 1 + testimonialGallery.length) % testimonialGallery.length))
+  }
+
+  const goToReviewSlide = (nextIndex: number) => {
+    startTransition(() => setReviewSlide(nextIndex))
+  }
+
+  const selectMeasure = (nextIndex: number) => {
+    startTransition(() => setMeasureIndex(nextIndex))
+    setIsMeasureMenuOpen(false)
+  }
+
+  const acceptCookies = () => {
+    localStorage.setItem('eco_cookie_consent', 'all')
+    setCookieShown(false)
+  }
+
+  const rejectCookies = () => {
+    localStorage.setItem('eco_cookie_consent', 'essential')
+    setCookieShown(false)
+  }
 
   return (
     <>
-      {/* NAV */}
       <nav role="navigation" aria-label="Menú principal">
-        <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
-          <div className="logo-img-wrap">
-            <Image src="/logo.png" alt="Ecosommier" width={62} height={62} priority style={{ objectFit: 'contain' }} />
-          </div>
-          <span className="logo-name">Ecosommier</span>
-        </a>
-        <ul className={`nav-links${menuOpen ? ' open' : ''}`} id="navLinks">
-          {['#products','#eco','#testimonials'].map((href, i) => (
-            <li key={href}><a href={href} onClick={() => setMenuOpen(false)}>{['Colección','Eco','Reseñas'][i]}</a></li>
-          ))}
-          <li><a href="#cta" className="nav-btn" onClick={() => setMenuOpen(false)}>Consultar →</a></li>
-        </ul>
-        <button className={`hamburger${menuOpen ? ' active' : ''}`} onClick={() => setMenuOpen(v => !v)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen}>
-          <span /><span /><span />
-        </button>
+        <div className="nav-shell">
+          <a href="#hero" className="logo" aria-label="Ecosommier - Inicio">
+            <div className="logo-img-wrap" aria-hidden="true">
+              <div className="logo-img-shell">
+                <Image src="/logo-icon.png" alt="Ecosommier" width={54} height={54} priority style={{ objectFit: 'contain' }} />
+              </div>
+            </div>
+            <span className="logo-copy">
+              <span className="logo-kicker">Descanso premium</span>
+              <span className="logo-name"><span>Eco</span>sommier</span>
+            </span>
+          </a>
+        </div>
       </nav>
 
-      {/* HERO */}
-      <section className="snap-section" id="hero">
-        <StarField id="s-hero" />
-        <div className="hero-content">
-          <h1 className="hero-title">
-            <span className="reveal">Dormí mejor.</span><br/>
-            <span className="line2 reveal">Viví en armonía.</span>
-          </h1>
-          <p className="hero-sub reveal">Ecosommier une el bienestar del sueño profundo con materiales ecológicos de alta gama. Cada colchón diseñado para transformar tu descanso.</p>
-          <div className="hero-actions reveal">
-            <a href="#products" className="btn-main">Ver colección</a>
-            <a href="#cta" className="btn-ghost">Asesoría gratuita</a>
-          </div>
-        </div>
-        <div className="hero-visual">
-          <div className="hero-mat-wrap">
-            <div className="hero-carousel">
-              <button className="carousel-btn" onClick={() => setSlide(i => (i - 1 + heroImages.length) % heroImages.length)} aria-label="Anterior">&#8249;</button>
-              <div>
-                <div className="hero-colchon-img">
-                  <Image src={heroImages[slide]} alt={`Colchón Ecosommier ${slide + 1}`} width={480} height={380} priority style={{ objectFit: 'cover', borderRadius: '16px', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,.5))', animation: 'floatImg 5s ease-in-out infinite' }} />
+      <main>
+        <section className="hero-section" id="hero">
+          <StarField id="hero-stars" />
+
+          <div className="section-shell hero-shell">
+            <div className="hero-copy-block">
+              <h1 className="hero-title">
+                <span className="reveal">Dormí mejor.</span><br />
+                <span className="line2 reveal">Elegí sin dudas.</span>
+              </h1>
+              <p className="hero-sub reveal">
+                Colchones premium, asesoramiento real y una elección mucho más clara.
+              </p>
+
+              <div className="hero-actions reveal">
+                <a href={whatsappHref('Hola, quiero que me ayuden a elegir el colchón ideal para mí.')} className="btn-wa" {...externalLinkProps}>
+                  Hablar por WhatsApp
+                </a>
+                <a href="#products" className="btn-main">Ver colección</a>
+              </div>
+
+              <p className="hero-note reveal">Respuesta ágil. Recomendación concreta. Compra acompañada.</p>
+            </div>
+
+            <div className="hero-visual reveal-r">
+              <div className="hero-frame">
+                <div className="hero-carousel">
+                  <button className="carousel-btn" onClick={previousSlide} aria-label="Imagen anterior" type="button">&#8249;</button>
+
+                  <div className="hero-media">
+                    <Image
+                      src={heroImages[slide]}
+                      alt={`Ambiente Ecosommier ${slide + 1}`}
+                      width={620}
+                      height={470}
+                      priority
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+
+                  <button className="carousel-btn" onClick={nextSlide} aria-label="Imagen siguiente" type="button">&#8250;</button>
                 </div>
-                <div className="carousel-dots">
-                  {heroImages.map((_, i) => (
-                    <div key={i} className={`carousel-dot${i === slide ? ' active' : ''}`} onClick={() => setSlide(i)} />
+
+                <div className="carousel-dots" role="tablist" aria-label="Galería principal">
+                  {heroImages.map((image, index) => (
+                    <button
+                      key={image}
+                      className={`carousel-dot${index === slide ? ' active' : ''}`}
+                      onClick={() => goToSlide(index)}
+                      aria-label={`Ver imagen ${index + 1}`}
+                      aria-pressed={index === slide}
+                      type="button"
+                    />
                   ))}
                 </div>
+
               </div>
-              <button className="carousel-btn" onClick={() => setSlide(i => (i + 1) % heroImages.length)} aria-label="Siguiente">&#8250;</button>
             </div>
-            <div className="hero-badges hero-badges-low">
-              {[['🌙','Sueño profundo','4.5s','0s'],['🛡️','5 años garantía','5s','.6s']].map(([ico,txt,bf,bfd]) => (
-                <div key={txt} className="h-badge" style={{ ['--bf' as string]: bf, ['--bfd' as string]: bfd }}>
-                  <span className="ico">{ico}</span><span className="txt">{txt}</span>
-                </div>
+          </div>
+        </section>
+
+        <section className="page-section collection-section" id="products">
+          <StarField id="products-stars" />
+
+          <div className="section-shell">
+            <div className="section-head reveal">
+              <div className="section-tag">Nuestra colección</div>
+              <h2 className="section-title">Tres modelos claros,<br /><em>una elección mejor guiada.</em></h2>
+            </div>
+
+            <div className="density-guide reveal">
+              <span className="density-guide-tag">Guía breve</span>
+              <p>La densidad determina la calidad, la comodidad y la durabilidad de un colchón. Al elegir, es clave mirar ese dato.</p>
+            </div>
+
+            <div className="prod-grid">
+              {products.map((product) => (
+                <article key={product.id} className="prod-card reveal" id={product.id}>
+                  <div className={`prod-visual ${product.tone}`}>
+                    <Image src={product.image} alt={product.name} width={380} height={240} style={{ objectFit: 'contain' }} />
+                    <div className="prod-badge">{product.badge}</div>
+                  </div>
+
+                  <div className="prod-body">
+                    <h3>{product.name}</h3>
+
+                    <ul className="prod-points prod-specs-list">
+                      {product.specs.map((spec) => (
+                        <li key={spec}>{spec}</li>
+                      ))}
+                    </ul>
+
+                    <div className="prod-footer">
+                      <a href={whatsappHref(product.message)} className="btn-wa prod-btn" {...externalLinkProps}>
+                        Consultar {product.name.replace('Ecosommier ', '')}
+                      </a>
+                    </div>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
-        </div>
-        <div className="scroll-hint" onClick={() => document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })}>
-          <span>Descubrir</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </section>
+        </section>
 
-      {/* PRODUCTS */}
-      <section className="snap-section" id="products">
-        <StarField id="s-prod" />
-        <div className="prod-header reveal">
-          <div className="section-tag">Nuestra colección</div>
-          <h2 className="section-title">Elegí tu colchón<br/><em>perfecto</em></h2>
-        </div>
-        <div className="prod-grid">
-          {[
-            { id: 'eco-platino', name: 'Ecosommier Platino', desc: 'Confort accesible con calidad Ecosommier. Ideal para empezar a dormir mejor sin resignar soporte.', badge: '', badgeStyle: {}, img: '/platino.png' },
-            { id: 'eco-confort', name: 'Ecosommier Confort', desc: 'El equilibrio perfecto entre suavidad y firmeza. Resortes ensacados y capas de alta densidad.', badge: 'Más vendido', badgeStyle: {}, img: '/confort.png' },
-            { id: 'eco-premium', name: 'Ecosommier Premium', desc: 'Nuestra línea superior. Máximo soporte, materiales de primera y terminaciones de lujo para el mejor descanso.', badge: 'Premium', badgeStyle: { background: 'linear-gradient(135deg,#b8892c,#c9a84c)' }, img: '/premium.png' },
-          ].map(p => (
-            <div key={p.id} className="prod-card reveal" id={p.id} data-product-id={p.id} data-product-name={p.name} tabIndex={0} role="article" aria-label={p.name}>
-              <div className="prod-visual pv-blue">
-                <Image src={p.img} alt={p.name} width={320} height={200} style={{ objectFit: 'contain', filter: 'drop-shadow(0 8px 24px rgba(0,0,0,.4))' }} />
-                {p.badge && <div className="prod-badge" style={p.badgeStyle}>{p.badge}</div>}
+        <section className="page-section measure-section" id="measures">
+          <StarField id="measures-stars" />
+
+          <div className="section-shell">
+            <div className="section-head reveal">
+              <div className="section-tag">Elegí tu medida</div>
+              <h2 className="section-title">Una medida clara,<br /><em>según tu espacio y tu forma de dormir.</em></h2>
+              <p className="section-copy">Te dejamos una guía rápida para que visualices mejor el tamaño que necesitás. Después te asesoramos por WhatsApp con el modelo que más te conviene.</p>
+            </div>
+
+            <div className="measure-picker reveal">
+              <div className={`measure-select${isMeasureMenuOpen ? ' open' : ''}`}>
+                <button
+                  className="measure-select-trigger"
+                  onClick={() => setIsMeasureMenuOpen((current) => !current)}
+                  aria-expanded={isMeasureMenuOpen}
+                  aria-controls="measure-options"
+                  type="button"
+                >
+                  <span className="measure-select-copy">
+                    <span className="measure-select-kicker">Seleccioná una medida</span>
+                    <span className="measure-select-value">{selectedMeasure.name} · {selectedMeasure.label}</span>
+                  </span>
+                  <span className="measure-select-icon" aria-hidden="true">▾</span>
+                </button>
+
+                <div className="measure-select-menu" id="measure-options" role="listbox" aria-label="Seleccionar medida">
+                  {measureOptions.map((measure, index) => (
+                    <button
+                      key={measure.id}
+                      className={`measure-option${index === measureIndex ? ' active' : ''}`}
+                      onClick={() => selectMeasure(index)}
+                      aria-selected={index === measureIndex}
+                      role="option"
+                      type="button"
+                    >
+                      <span className="measure-option-name">{measure.name}</span>
+                      <span className="measure-option-label">{measure.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="prod-body">
-                <h3>{p.name}</h3>
-                <p>{p.desc}</p>
-                <div className="prod-footer">
-                  <a href={`https://wa.me/542302621528?text=${encodeURIComponent('Hola, me interesa este modelo de colchón')}`} target="_blank" rel="noopener noreferrer" className="btn-main prod-wa-btn">Consultar por WhatsApp →</a>
+
+              <div className="measure-panel">
+                <div className="measure-visual-stage reveal-l">
+                  <div className="measure-visual-glow" aria-hidden="true" />
+                  <div className="measure-bed-shell">
+                    {selectedMeasure.image ? (
+                      <div className="measure-photo-wrap" style={{ maxWidth: selectedMeasure.photoWidth }}>
+                        <Image
+                          src={selectedMeasure.image}
+                          alt={`Ecosommier medida ${selectedMeasure.label}`}
+                          width={1217}
+                          height={1600}
+                          className="measure-photo"
+                          style={{ transform: `translateY(${selectedMeasure.photoShiftY}) scale(${selectedMeasure.photoScale})` }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="measure-placeholder" aria-hidden="true">
+                        <div className="measure-placeholder-bed" />
+                        <div className="measure-placeholder-copy">Imagen en carga</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="measure-copy reveal-r">
+                  <div className="measure-copy-head">
+                    <span className="measure-kicker">Medida seleccionada</span>
+                    <h3>{selectedMeasure.name}</h3>
+                    <p>{selectedMeasure.summary}</p>
+                  </div>
+
+                  <div className="measure-specs">
+                    <div className="measure-spec-card">
+                      <span>Ancho</span>
+                      <strong>{selectedMeasure.width}</strong>
+                    </div>
+                    <div className="measure-spec-card">
+                      <span>Largo</span>
+                      <strong>{selectedMeasure.length}</strong>
+                    </div>
+                    <div className="measure-spec-card">
+                      <span>Altura</span>
+                      <strong>{selectedMeasure.height}</strong>
+                    </div>
+                  </div>
+
+                  <p className="measure-ideal"><strong>Ideal para:</strong> {selectedMeasure.ideal}</p>
+
+                  <div className="measure-actions">
+                    <a
+                      href={whatsappHref(`Hola, quiero consultar por la medida ${selectedMeasure.label} y cuál modelo me recomiendan entre Platino, Confort y Premium.`)}
+                      className="btn-wa"
+                      {...externalLinkProps}
+                    >
+                      Consultar esta medida
+                    </a>
+                    <a href="#products" className="btn-main">Ver modelos</a>
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* ECO */}
-      <section className="snap-section" id="eco">
-        <StarField id="s-eco" />
-        <div className="eco-left reveal-l">
-          <div className="section-tag">Nuestro compromiso</div>
-          <h2 className="section-title">Bien para ti.<br/><em>Bien para el planeta.</em></h2>
-          <p>Cada decisión en Ecosommier está guiada por el respeto al medioambiente. Producimos localmente, usamos energía renovable y elegimos proveedores responsables.</p>
-          <a href="#cta" className="btn-main">Quiero saber más</a>
-        </div>
-      </section>
+        <section className="page-section experience-section" id="experience">
+          <div className="section-shell experience-grid">
+            <div className="experience-copy reveal-l">
+              <div className="section-tag">Compra simple, atención real</div>
+              <h2 className="section-title">Una experiencia premium,<br /><em>sin fricción ni dudas.</em></h2>
+              <a href={whatsappHref('Hola, quiero que me asesoren por WhatsApp para elegir entre Platino, Confort y Premium.')} className="btn-main" {...externalLinkProps}>
+                Quiero asesoramiento
+              </a>
+            </div>
 
-      {/* TESTIMONIALS */}
-      <section className="snap-section" id="testimonials">
-        <StarField id="s-testi" />
-        <div className="testi-header reveal">
-          <div className="section-tag">Lo que dicen</div>
-          <h2 className="section-title">Más de 500 familias<br/><em>duermen mejor</em></h2>
-        </div>
-        <div className="testi-runner reveal">
-          <div className="testi-track">
-            {testiDouble.map((t, i) => (
-              <div key={i} className="t-card">
-                <div className="t-stars">★★★★★</div>
-                <blockquote>{t.q}</blockquote>
-                <div className="t-author">
-                  <div className="t-avatar">{t.i}</div>
-                  <div><div className="t-name">{t.name}</div><div className="t-city">{t.city}</div></div>
+            <div className="experience-side reveal-r">
+              <div className="steps-grid">
+                {serviceSteps.map((item) => (
+                  <div key={item.step} className="step-card">
+                    <span className="step-index">{item.step}</span>
+                    <h3>{item.title}</h3>
+                    <p>{item.copy}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="page-section reviews-section" id="reviews">
+          <StarField id="reviews-stars" />
+
+          <div className="section-shell">
+            <div className="reviews-stage">
+              <div className="section-head reveal">
+                <h2 className="section-title">Clientes felices,<br /><em>compras reales.</em></h2>
+              </div>
+
+              <div className="metrics-grid reveal">
+                {metrics.map((metric) => (
+                  <div key={metric.label} className="metric-card">
+                    <div className="metric-value">{metric.value}</div>
+                    <div className="metric-label">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="reviews-carousel reveal">
+                <button className="carousel-btn review-nav" onClick={previousReviewSlide} aria-label="Testimonio anterior" type="button">&#8249;</button>
+                <article className="review-shot review-shot-active">
+                  <div className="review-shot-frame">
+                    <Image src={testimonialGallery[reviewSlide].src} alt={testimonialGallery[reviewSlide].alt} width={1080} height={1920} style={{ objectFit: 'contain' }} />
+                  </div>
+                </article>
+                <button className="carousel-btn review-nav" onClick={nextReviewSlide} aria-label="Siguiente testimonio" type="button">&#8250;</button>
+              </div>
+
+              <div className="review-dots reveal" role="tablist" aria-label="Clientes felices">
+                {testimonialGallery.map((item, index) => (
+                  <button
+                    key={item.src}
+                    className={`carousel-dot${index === reviewSlide ? ' active' : ''}`}
+                    onClick={() => goToReviewSlide(index)}
+                    aria-label={`Ver cliente ${index + 1}`}
+                    aria-pressed={index === reviewSlide}
+                    type="button"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="page-section social-section" id="redes">
+          <div className="section-shell">
+            <div className="section-head reveal">
+              <div className="section-tag">Redes y contacto</div>
+              <h2 className="section-title">Seguinos donde<br /><em>más pasa todo.</em></h2>
+            </div>
+
+            <div className="social-grid">
+              <a href={facebookUrl} className="social-card social-card-primary reveal" {...externalLinkProps}>
+                <span className="social-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6H17V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4V11H7.5v3h2.8v8h3.2Z"/></svg>
+                </span>
+                <span className="social-eyebrow">Canal principal</span>
+                <h3>Facebook Ecosommier</h3>
+                <p>El canal más fuerte del emprendimiento. Ahí compartimos entregas, novedades y el movimiento real de cada venta.</p>
+                <span className="social-link">Ir a Facebook</span>
+              </a>
+
+              <a href={instagramUrl} className="social-card reveal" {...externalLinkProps}>
+                <span className="social-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+                </span>
+                <span className="social-eyebrow">Contenido visual</span>
+                <h3>Instagram</h3>
+                <p>Mirá más fotos, publicaciones y seguí de cerca la identidad visual de Ecosommier.</p>
+                <span className="social-link">Ver Instagram</span>
+              </a>
+
+              <div className="social-card social-contact-card reveal">
+                <span className="social-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h2.3a1.5 1.5 0 0 1 1.45 1.13l.7 2.8a1.5 1.5 0 0 1-.4 1.46l-1.24 1.24a15.8 15.8 0 0 0 5.04 5.04l1.24-1.24a1.5 1.5 0 0 1 1.46-.4l2.8.7A1.5 1.5 0 0 1 20 16.2v2.3A1.5 1.5 0 0 1 18.5 20h-1C9.6 20 4 14.4 4 7.5v-2Z"/></svg>
+                </span>
+                <span className="social-eyebrow">Contacto directo</span>
+                <h3>Hablá con nosotros</h3>
+                <div className="contact-lines">
+                  <a href={whatsappHref('Hola, quiero asesoramiento para elegir un colchón Ecosommier.')} className="contact-line" {...externalLinkProps}>
+                    <span className="contact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.1 4.9A9.9 9.9 0 0 0 3.5 17.2L2 22l4.95-1.3A9.9 9.9 0 1 0 19.1 4.9Zm-7.2 15.3c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-2.9.76.78-2.82-.2-.3a8 8 0 1 1 7 3.78Zm4.39-6.03c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1-.37-1.9-1.18-.7-.62-1.16-1.38-1.3-1.62-.14-.24-.01-.37.11-.49.11-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.48-.4-.42-.54-.43h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.65.58.25 1.03.4 1.38.52.58.18 1.1.15 1.52.09.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28Z"/></svg>
+                    </span>
+                    <strong>WhatsApp</strong>
+                    <span>+54 2302 62-1528</span>
+                  </a>
+                  <a href={`tel:${callNumber}`} className="contact-line">
+                    <span className="contact-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18h2"/></svg>
+                    </span>
+                    <strong>Llamadas</strong>
+                    <span>+54 2302 62-8744</span>
+                  </a>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
-        </div>
-        <div className="testi-numbers reveal">
-          {[['500+','Clientes felices'],['★ 4.9','Valoración media'],['100%','Natural & Eco'],['10 años','Garantía']].map(([n,l]) => (
-            <div key={l} className="t-num"><div className="n">{n}</div><div className="l">{l}</div></div>
-          ))}
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* CTA */}
-      <section className="snap-section" id="cta">
-        <StarField id="s-cta" />
-        <div className="cta-inner">
-          <div className="section-tag reveal">Empezá hoy</div>
-          <h2 className="reveal">¿Listo para tu<br/><span>mejor noche de sueño?</span></h2>
-          <p className="reveal">Dejanos tu contacto y un asesor especializado te ayuda a encontrar el colchón ideal para vos. Sin compromiso.</p>
-          <form className="cta-form reveal" id="contactForm" action={`https://formspree.io/f/${formspreeId}`} method="POST" onSubmit={handleSubmit}>
-            <input type="hidden" name="_subject" value="🛏️ Nuevo lead Ecosommier"/>
-            <input type="hidden" name="_replyto" value="ni_co801@hotmail.com"/>
-            <input ref={nameRef}  type="text" name="nombre"   placeholder="Tu nombre"   required autoComplete="name"/>
-            <input ref={phoneRef} type="tel"  name="whatsapp" placeholder="Tu WhatsApp" required autoComplete="tel"/>
-            <button type="submit" disabled={formState === 'sending' || formState === 'ok'}
-              style={ formState === 'ok' ? { background: 'linear-gradient(135deg,#059669,#10b981)' } : formState === 'error' ? { background: 'linear-gradient(135deg,#dc2626,#ef4444)' } : {} }>
-              { formState === 'idle'    ? 'Quiero asesoría gratis →'
-              : formState === 'sending' ? 'Enviando...'
-              : formState === 'ok'      ? '✓ ¡Te contactamos pronto!'
-              :                           'Error, intentá de nuevo' }
-            </button>
-          </form>
-          <div className="cta-trust reveal">
-            <span>🔒 Sin spam</span>
-            <span>⚡ Respuesta en menos de 1 hora</span>
-            <span>🎁 Asesoría 100% gratuita</span>
+      <footer className="site-footer">
+        <div className="section-shell footer-shell">
+          <div className="foot-brand">
+            <div className="foot-brand-copy">
+              <span className="foot-kicker">Descanso premium</span>
+              <span className="foot-wordmark">Ecosommier</span>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer>
-        <div className="foot-logo"><Image src="/logo.png" alt="Ecosommier" width={90} height={90} style={{ objectFit: 'contain', mixBlendMode: 'screen', filter: 'invert(1)' }} /></div>
-        <div className="foot-copy">© 2026 Ecosommier · Todos los derechos reservados</div>
-        <div className="foot-links">
-          {['#products','#eco','#cta'].map((href,i) => (
-            <a key={href} href={href}>{['Colección','Eco','Contacto'][i]}</a>
-          ))}
         </div>
       </footer>
 
-      {/* WA */}
-      <a className="wa-float" href={`https://wa.me/542302621528?text=${encodeURIComponent('Hola, me interesa este modelo de colchón')}`} target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">💬</a>
+      <a
+        className="wa-float"
+        href={whatsappHref('Hola, quiero asesoramiento para elegir un colchón Ecosommier.')}
+        {...externalLinkProps}
+        aria-label="Contactar por WhatsApp"
+      >
+        💬
+      </a>
 
-      {/* COOKIE */}
       <div className={`cookie-banner${cookieShown ? ' show' : ''}`} role="dialog" aria-label="Aviso de cookies">
-        <p>Usamos cookies para mejorar tu experiencia. <a href="#">Política de privacidad</a>.</p>
+        <p>Usamos cookies mínimas para mejorar la experiencia del sitio. Podés aceptar todas o quedarte solo con las esenciales.</p>
         <div className="cookie-btns">
-          <button className="cookie-accept" onClick={() => { localStorage.setItem('eco_cookie_consent','all'); setCookieShown(false) }}>Aceptar</button>
-          <button className="cookie-reject" onClick={() => { localStorage.setItem('eco_cookie_consent','essential'); setCookieShown(false) }}>Solo esenciales</button>
+          <button className="cookie-accept" onClick={acceptCookies} type="button">Aceptar</button>
+          <button className="cookie-reject" onClick={rejectCookies} type="button">Solo esenciales</button>
         </div>
       </div>
     </>
