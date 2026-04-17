@@ -168,6 +168,7 @@ export default function Home() {
   const [slide, setSlide] = useState(0)
   const [reviewSlide, setReviewSlide] = useState(0)
   const [measureIndex, setMeasureIndex] = useState(2)
+  const [isMeasureMenuOpen, setIsMeasureMenuOpen] = useState(false)
   const [cookieShown, setCookieShown] = useState(false)
   const selectedMeasure = measureOptions[measureIndex]
 
@@ -233,6 +234,11 @@ export default function Home() {
 
   const goToReviewSlide = (nextIndex: number) => {
     startTransition(() => setReviewSlide(nextIndex))
+  }
+
+  const selectMeasure = (nextIndex: number) => {
+    startTransition(() => setMeasureIndex(nextIndex))
+    setIsMeasureMenuOpen(false)
   }
 
   const acceptCookies = () => {
@@ -378,18 +384,36 @@ export default function Home() {
             </div>
 
             <div className="measure-picker reveal">
-              <div className="measure-chip-row" role="tablist" aria-label="Seleccionar medida">
-                {measureOptions.map((measure, index) => (
-                  <button
-                    key={measure.id}
-                    className={`measure-chip${index === measureIndex ? ' active' : ''}`}
-                    onClick={() => setMeasureIndex(index)}
-                    aria-selected={index === measureIndex}
-                    type="button"
-                  >
-                    {measure.label}
-                  </button>
-                ))}
+              <div className={`measure-select${isMeasureMenuOpen ? ' open' : ''}`}>
+                <button
+                  className="measure-select-trigger"
+                  onClick={() => setIsMeasureMenuOpen((current) => !current)}
+                  aria-expanded={isMeasureMenuOpen}
+                  aria-controls="measure-options"
+                  type="button"
+                >
+                  <span className="measure-select-copy">
+                    <span className="measure-select-kicker">Seleccioná una medida</span>
+                    <span className="measure-select-value">{selectedMeasure.name} · {selectedMeasure.label}</span>
+                  </span>
+                  <span className="measure-select-icon" aria-hidden="true">▾</span>
+                </button>
+
+                <div className="measure-select-menu" id="measure-options" role="listbox" aria-label="Seleccionar medida">
+                  {measureOptions.map((measure, index) => (
+                    <button
+                      key={measure.id}
+                      className={`measure-option${index === measureIndex ? ' active' : ''}`}
+                      onClick={() => selectMeasure(index)}
+                      aria-selected={index === measureIndex}
+                      role="option"
+                      type="button"
+                    >
+                      <span className="measure-option-name">{measure.name}</span>
+                      <span className="measure-option-label">{measure.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="measure-panel">
@@ -484,40 +508,42 @@ export default function Home() {
           <StarField id="reviews-stars" />
 
           <div className="section-shell">
-            <div className="section-head reveal">
-              <h2 className="section-title">Clientes felices,<br /><em>compras reales.</em></h2>
-            </div>
+            <div className="reviews-stage">
+              <div className="section-head reveal">
+                <h2 className="section-title">Clientes felices,<br /><em>compras reales.</em></h2>
+              </div>
 
-            <div className="metrics-grid reveal">
-              {metrics.map((metric) => (
-                <div key={metric.label} className="metric-card">
-                  <div className="metric-value">{metric.value}</div>
-                  <div className="metric-label">{metric.label}</div>
-                </div>
-              ))}
-            </div>
+              <div className="metrics-grid reveal">
+                {metrics.map((metric) => (
+                  <div key={metric.label} className="metric-card">
+                    <div className="metric-value">{metric.value}</div>
+                    <div className="metric-label">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
 
-            <div className="reviews-carousel reveal">
-              <button className="carousel-btn review-nav" onClick={previousReviewSlide} aria-label="Testimonio anterior" type="button">&#8249;</button>
-              <article className="review-shot review-shot-active">
-                <div className="review-shot-frame">
-                  <Image src={testimonialGallery[reviewSlide].src} alt={testimonialGallery[reviewSlide].alt} width={1080} height={1920} style={{ objectFit: 'contain' }} />
-                </div>
-              </article>
-              <button className="carousel-btn review-nav" onClick={nextReviewSlide} aria-label="Siguiente testimonio" type="button">&#8250;</button>
-            </div>
+              <div className="reviews-carousel reveal">
+                <button className="carousel-btn review-nav" onClick={previousReviewSlide} aria-label="Testimonio anterior" type="button">&#8249;</button>
+                <article className="review-shot review-shot-active">
+                  <div className="review-shot-frame">
+                    <Image src={testimonialGallery[reviewSlide].src} alt={testimonialGallery[reviewSlide].alt} width={1080} height={1920} style={{ objectFit: 'contain' }} />
+                  </div>
+                </article>
+                <button className="carousel-btn review-nav" onClick={nextReviewSlide} aria-label="Siguiente testimonio" type="button">&#8250;</button>
+              </div>
 
-            <div className="review-dots reveal" role="tablist" aria-label="Clientes felices">
-              {testimonialGallery.map((item, index) => (
-                <button
-                  key={item.src}
-                  className={`carousel-dot${index === reviewSlide ? ' active' : ''}`}
-                  onClick={() => goToReviewSlide(index)}
-                  aria-label={`Ver cliente ${index + 1}`}
-                  aria-pressed={index === reviewSlide}
-                  type="button"
-                />
-              ))}
+              <div className="review-dots reveal" role="tablist" aria-label="Clientes felices">
+                {testimonialGallery.map((item, index) => (
+                  <button
+                    key={item.src}
+                    className={`carousel-dot${index === reviewSlide ? ' active' : ''}`}
+                    onClick={() => goToReviewSlide(index)}
+                    aria-label={`Ver cliente ${index + 1}`}
+                    aria-pressed={index === reviewSlide}
+                    type="button"
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </section>
