@@ -149,10 +149,6 @@ const serviceSteps = [
   },
 ]
 
-const metrics = [
-  { value: '500+', label: 'Hogares acompañados' },
-]
-
 const testimonialGallery = [
   { src: '/testimonios-nuevos/cliente-real-1.jpeg', alt: 'Cliente feliz Ecosommier 1' },
   { src: '/testimonios-nuevos/cliente-real-2.jpeg', alt: 'Cliente feliz Ecosommier 2' },
@@ -513,15 +509,6 @@ export default function Home() {
               <div className="section-head reveal">
                 <h2 className="section-title">Clientes felices,<br /><em>compras reales.</em></h2>
                 <p className="section-copy review-copy">Fotos compartidas por clientes después de recibir su Ecosommier en casa.</p>
-              </div>
-
-              <div className="metrics-grid reveal">
-                {metrics.map((metric) => (
-                  <div key={metric.label} className="metric-card reveal">
-                    <div className="metric-value">{metric.value}</div>
-                    <div className="metric-label">{metric.label}</div>
-                  </div>
-                ))}
               </div>
 
               <div className="reviews-carousel reveal">
