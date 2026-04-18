@@ -33,9 +33,9 @@ html {
 }
 
 body {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-display), serif;
   font-weight: 500;
-  letter-spacing: 0.008em;
+  letter-spacing: 0.006em;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   background:
@@ -197,7 +197,7 @@ nav {
 
 .logo-kicker {
   color: rgba(255, 255, 255, 0.28);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-display), serif;
   font-size: 0.5rem;
   font-weight: 700;
   letter-spacing: 0.34em;
@@ -235,7 +235,7 @@ nav {
 }
 
 .btn-main {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-display), serif;
   border-color: rgba(255, 255, 255, 0.14);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
   color: var(--white);
@@ -247,7 +247,7 @@ nav {
 }
 
 .btn-wa {
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-display), serif;
   background: linear-gradient(135deg, var(--whatsapp-dark), var(--whatsapp));
   color: #fff;
   box-shadow: 0 12px 28px rgba(37, 211, 102, 0.2);
@@ -802,7 +802,7 @@ nav {
 
 .measure-option-label {
   color: rgba(255, 255, 255, 0.58);
-  font-family: var(--font-sans), sans-serif;
+  font-family: var(--font-display), serif;
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
