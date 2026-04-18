@@ -534,22 +534,6 @@ export default function Home() {
                 <button className="carousel-btn review-nav" onClick={nextReviewSlide} aria-label="Siguiente testimonio" type="button">&#8250;</button>
               </div>
 
-              <div className="review-thumbs reveal" role="tablist" aria-label="Clientes felices">
-                {testimonialGallery.map((item, index) => (
-                  <button
-                    key={item.src}
-                    className={`review-thumb${index === reviewSlide ? ' active' : ''}`}
-                    onClick={() => goToReviewSlide(index)}
-                    aria-label={`Ver cliente ${index + 1}`}
-                    aria-pressed={index === reviewSlide}
-                    type="button"
-                  >
-                    <span className="review-thumb-frame">
-                      <Image src={item.src} alt={item.alt} width={260} height={360} style={{ objectFit: 'contain' }} />
-                    </span>
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </section>
