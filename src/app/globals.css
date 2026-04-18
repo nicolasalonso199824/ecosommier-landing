@@ -100,9 +100,9 @@ img {
 .section-title {
   font-family: var(--font-display), serif;
   font-size: clamp(2.5rem, 5vw, 4.4rem);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 0.98;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.008em;
   text-wrap: balance;
 }
 
@@ -206,9 +206,9 @@ nav {
   color: var(--white);
   display: block;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 0.9;
-  letter-spacing: 0.11em;
+  letter-spacing: 0.085em;
   text-transform: uppercase;
   text-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
@@ -299,9 +299,9 @@ nav {
 .hero-title {
   font-family: var(--font-display), serif;
   font-size: clamp(4.1rem, 8vw, 7.4rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: 0.018em;
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: 0.006em;
   text-wrap: balance;
 }
 
@@ -311,8 +311,9 @@ nav {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-style: italic;
-  padding-right: 0.05em;
-  padding-bottom: 0.11em;
+  font-weight: 600;
+  padding-right: 0.04em;
+  padding-bottom: 0.08em;
 }
 
 .hero-sub {
@@ -596,9 +597,21 @@ nav {
 
 .prod-body h3 {
   font-family: var(--font-display), serif;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 0.95;
+  font-size: clamp(2.25rem, 3vw, 2.9rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  text-wrap: balance;
+  text-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+.prod-body h3::after {
+  content: '';
+  display: block;
+  width: 72px;
+  height: 1px;
+  margin-top: 0.8rem;
+  background: linear-gradient(90deg, rgba(206, 176, 122, 0.72), rgba(169, 200, 255, 0.16));
   text-wrap: balance;
 }
 
@@ -619,9 +632,11 @@ nav {
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   color: var(--muted-strong);
-  font-family: var(--font-sans), sans-serif;
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-family: var(--font-display), serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.72;
+  letter-spacing: 0.005em;
 }
 
 .prod-specs-list {
@@ -629,8 +644,8 @@ nav {
 }
 
 .prod-specs-list li {
-  font-size: 0.88rem;
-  line-height: 1.75;
+  font-size: 0.96rem;
+  line-height: 1.78;
   text-wrap: pretty;
 }
 
@@ -918,8 +933,8 @@ nav {
   margin-top: 0.45rem;
   font-family: var(--font-display), serif;
   font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 0.95;
-  font-weight: 600;
+  line-height: 0.93;
+  font-weight: 700;
 }
 
 .measure-copy-head p,
@@ -1037,7 +1052,7 @@ nav {
 
 .step-card h3 {
   font-size: 1.55rem;
-  line-height: 1;
+  line-height: 0.96;
   text-wrap: balance;
 }
 
@@ -1097,7 +1112,7 @@ nav {
   font-family: var(--font-display), serif;
   color: var(--blue-soft);
   font-size: 2.4rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -1271,8 +1286,8 @@ nav {
 .social-card h3 {
   font-family: var(--font-display), serif;
   font-size: 2rem;
-  line-height: 0.95;
-  font-weight: 600;
+  line-height: 0.93;
+  font-weight: 700;
   text-wrap: balance;
 }
 
@@ -1383,7 +1398,7 @@ nav {
   font-family: var(--font-display), serif;
   color: var(--white);
   font-size: 1.32rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1658,6 +1673,7 @@ summary:focus-visible {
 
   .hero-title {
     font-size: clamp(3.25rem, 15vw, 5rem);
+    line-height: 0.94;
   }
 
   .hero-sub,
@@ -1705,6 +1721,21 @@ summary:focus-visible {
   .social-grid,
   .measure-specs {
     grid-template-columns: 1fr;
+  }
+
+  .prod-body h3 {
+    font-size: clamp(2rem, 8vw, 2.45rem);
+    line-height: 0.92;
+  }
+
+  .prod-body h3::after {
+    width: 60px;
+    margin-top: 0.7rem;
+  }
+
+  .prod-specs-list li {
+    font-size: 0.92rem;
+    line-height: 1.72;
   }
 
   .measure-select {

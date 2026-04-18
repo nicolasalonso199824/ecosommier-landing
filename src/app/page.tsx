@@ -16,7 +16,7 @@ const heroImages = ['/hero.jpg', '/galeria1.jpg', '/galeria4.jpg']
 const products = [
   {
     id: 'eco-platino',
-    name: 'Ecosommier Platino',
+    name: 'Platino',
     badge: 'Densidad media',
     tone: 'tone-silver',
     image: '/platino.png',
@@ -30,7 +30,7 @@ const products = [
   },
   {
     id: 'eco-confort',
-    name: 'Ecosommier Confort',
+    name: 'Confort',
     badge: 'Densidad alta',
     tone: 'tone-blue',
     image: '/confort.png',
@@ -44,7 +44,7 @@ const products = [
   },
   {
     id: 'eco-premium',
-    name: 'Ecosommier Premium',
+    name: 'Premium',
     badge: 'Densidad extrema',
     tone: 'tone-gold',
     image: '/premium.png',
@@ -364,7 +364,7 @@ export default function Home() {
 
                     <div className="prod-footer">
                       <a href={whatsappHref(product.message)} className="btn-wa prod-btn" {...externalLinkProps}>
-                        Consultar {product.name.replace('Ecosommier ', '')}
+                        Consultar {product.name}
                       </a>
                     </div>
                   </div>
