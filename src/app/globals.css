@@ -734,10 +734,10 @@ nav {
 .measure-select-value {
   color: var(--white);
   font-family: var(--font-sans), sans-serif;
-  font-size: 1.05rem;
+  font-size: 1.12rem;
   font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  line-height: 1.16;
+  letter-spacing: 0.008em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -799,9 +799,9 @@ nav {
 
 .measure-option-name {
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.96rem;
+  font-size: 1rem;
   font-weight: 800;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.008em;
 }
 
 .measure-option-label {
@@ -946,10 +946,11 @@ nav {
 
 .measure-copy h3 {
   margin-top: 0.45rem;
-  font-family: var(--font-display), serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 0.93;
-  font-weight: 700;
+  font-family: var(--font-sans), sans-serif;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.008em;
 }
 
 .measure-copy-head p,
@@ -1741,7 +1742,15 @@ summary:focus-visible {
   }
 
   .measure-select-value {
-    font-size: 0.98rem;
+    font-size: 1.02rem;
+  }
+
+  .measure-option-name {
+    font-size: 0.94rem;
+  }
+
+  .measure-copy h3 {
+    font-size: clamp(1.75rem, 7vw, 2.15rem);
   }
 
   .measure-select-kicker {
