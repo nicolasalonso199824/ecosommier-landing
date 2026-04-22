@@ -492,7 +492,7 @@ export default function Home() {
                 {serviceSteps.map((item) => (
                   <div key={item.step} className="step-card reveal">
                     <span className="step-index">{item.step}</span>
-                    <h3>{item.title}</h3>
+                    <h3>{item.step === '02' ? <>Te&nbsp;recomendamos el modelo correcto</> : item.title}</h3>
                     <p>{item.copy}</p>
                   </div>
                 ))}

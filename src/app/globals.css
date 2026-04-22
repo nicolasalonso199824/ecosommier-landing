@@ -482,11 +482,11 @@ nav {
 
 .density-guide p {
   color: var(--muted-strong);
-  font-family: var(--font-display), serif;
-  font-size: 1.08rem;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.96rem;
   font-weight: 500;
-  line-height: 1.65;
-  letter-spacing: 0.01em;
+  line-height: 1.72;
+  letter-spacing: 0.006em;
   text-wrap: pretty;
 }
 
@@ -957,10 +957,10 @@ nav {
 .measure-ideal {
   color: var(--muted);
   font-family: var(--font-sans), sans-serif;
-  font-size: 0.98rem;
+  font-size: 0.96rem;
   font-weight: 500;
-  line-height: 1.76;
-  letter-spacing: 0.004em;
+  line-height: 1.72;
+  letter-spacing: 0.006em;
   text-wrap: pretty;
 }
 
@@ -1075,19 +1075,29 @@ nav {
 
 .step-card h3 {
   font-size: 1.55rem;
-  line-height: 0.96;
-  text-wrap: balance;
+  line-height: 1.02;
+  text-wrap: pretty;
 }
 
 .step-card p {
   margin-top: 0.85rem;
   color: var(--muted);
-  font-family: var(--font-display), serif;
-  font-size: 1.04rem;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.96rem;
   font-weight: 500;
-  line-height: 1.68;
-  letter-spacing: 0.01em;
+  line-height: 1.72;
+  letter-spacing: 0.006em;
   text-wrap: pretty;
+}
+
+.measure-section .section-copy,
+.reviews-section .section-copy,
+.social-section .section-copy {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.96rem;
+  font-weight: 500;
+  line-height: 1.72;
+  letter-spacing: 0.006em;
 }
 
 .review-copy {
@@ -1276,11 +1286,11 @@ nav {
 
 .social-card p {
   color: var(--muted);
-  font-family: var(--font-display), serif;
-  font-size: 1.06rem;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 0.96rem;
   font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
+  line-height: 1.72;
+  letter-spacing: 0.006em;
   text-wrap: pretty;
 }
 
@@ -1729,6 +1739,16 @@ summary:focus-visible {
 
   .prod-specs-list li {
     font-size: 0.94rem;
+    line-height: 1.68;
+  }
+
+  .measure-section .section-copy,
+  .reviews-section .section-copy,
+  .social-card p,
+  .step-card p,
+  .measure-copy-head p,
+  .measure-ideal {
+    font-size: 0.92rem;
     line-height: 1.68;
   }
 
