@@ -1680,6 +1680,10 @@ summary:focus-visible {
     line-height: 0.94;
   }
 
+  .hero-title .line2 {
+    padding-bottom: 0.22em;
+  }
+
   .hero-sub,
   .section-copy {
     font-size: 1.02rem;
